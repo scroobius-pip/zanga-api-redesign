@@ -1,0 +1,10 @@
+overwrite: true
+schema: ./faunadb/faunadbSchema.graphql
+documents: "./**/*.graphql"
+generates:
+  ./generated/sdk.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      # - "typescript-graphql-files-modules"
+      - "typescript-graphql-request"

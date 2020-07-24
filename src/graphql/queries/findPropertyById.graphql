@@ -1,0 +1,20 @@
+query property($id:ID!){
+    
+  findPropertyByID(id:$id){
+    city
+    id:_id
+    state
+    costType
+    costValue
+    featured
+    owner{
+      id:_id
+      name
+    }
+    title
+    images
+    description
+    pointCount
+  }
+
+}

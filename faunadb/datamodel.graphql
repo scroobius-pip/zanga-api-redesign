@@ -1,0 +1,104 @@
+
+type User {
+
+email: String! @unique
+phone: String! @unique
+name: String! @unique
+password: String!
+properties: [Property!] @relation
+type:UserType!
+cac: String @unique
+tin: String @unique
+contacts: [Contact!] @relation
+propertyPoints: [PropertyPoint!] @relation
+}
+
+type PropertyPoint {
+  user:User!
+  userId:ID!
+  profit: Float!
+  impressions: Int!
+  propertyTitle:String!
+  propertyId:ID!
+}
+
+type Contact {
+
+  name: String!
+  number: String!
+  property: Property! @relation
+  email: String
+  notes: String
+  to:User!
+}
+
+type Property {
+  pointCount: Int!
+  title: String!
+  city: String!
+  state: String!
+  costValue: Int!
+  costType:CostType!
+  owner:User!
+  images: [String!]!
+  description: String!
+  featured: Boolean!
+}
+
+enum CostType {
+  Rent
+  Sale
+}
+
+
+enum UserType {
+Agency
+Individual
+}
+
+type Query {
+  findPropertiesByCostType(costType:CostType!):[Property!]!
+  
+  findUserByEmail(email:String!):User
+  findPropertyPointByPropertyIdAndUserId(propertyId:ID!,userId:ID!):PropertyPoint
+  findPropertyByFeatured(featured:Boolean!):[Property!]
+}
+
+type Mutation {
+  incrementPropertyPoint(pointNo:Int!,propertyPointId:ID!,rate:Float!): PropertyPoint! @resolver(name:"increment_property_point")
+
+}
+
+# Query(Lambda(["pointNo","propertyId","rate"], 
+# Update(
+#   Ref(Collection("PropertyPoint"),Var("propertyId")),
+#   {
+#     data:{
+#       impressions:Add(
+#                 Select(
+#                     ['data','impressions'],
+#                     Get(
+#                         Ref(
+#                             Collection('PropertyPoint'),
+#                             Var("propertyId")
+#                         )
+#                     )
+#                 ),
+#                 Var("pointNo")
+#             ),
+#       profit:Add(
+#         Select(
+#           ['data','profit'],
+#           Get(
+#             Ref(
+#               Collection('PropertyPoint'),
+#               Var("propertyId")
+#               )
+#             )
+#           ),
+#           Multiply(Var("pointNo"),Var("rate"))
+#         )
+#     }
+#   }
+#   )
+# ))

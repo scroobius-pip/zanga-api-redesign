@@ -1,0 +1,367 @@
+directive @embedded on OBJECT
+directive @collection(name: String!) on OBJECT
+directive @index(name: String!) on FIELD_DEFINITION
+directive @resolver(
+  name: String
+  paginated: Boolean! = false
+) on FIELD_DEFINITION
+directive @relation(name: String) on FIELD_DEFINITION
+directive @unique(index: String) on FIELD_DEFINITION
+type Contact {
+  number: String!
+  name: String!
+  email: String
+  # The document's ID.
+  _id: ID!
+  to: User!
+  property: Property!
+  notes: String
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Contact' input values
+input ContactInput {
+  name: String!
+  number: String!
+  property: ContactPropertyRelation
+  email: String
+  notes: String
+  to: ContactToRelation
+}
+
+# The pagination object for elements of type 'Contact'.
+type ContactPage {
+  # The elements of type 'Contact' in this page.
+  data: [Contact]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Contact' and 'Property' using the field 'Contact.property'.
+input ContactPropertyRelation {
+  # Create a document of type 'Property' and associate it with the current document.
+  create: PropertyInput
+  # Connect a document of type 'Property' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Contact' and 'User' using the field 'Contact.to'.
+input ContactToRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
+
+enum CostType {
+  Rent
+  Sale
+}
+
+scalar Date
+
+# The `Long` scalar type
+# Long can represent values between -(2^63) and 2^63 - 1.
+scalar Long
+
+type Mutation {
+  # Update an existing document in the collection of 'User'
+  updateUser(
+    # The 'User' document's ID
+    id: ID!
+    # 'User' input values
+    data: UserInput!
+  ): User
+  # Create a new document in the collection of 'PropertyPoint'
+  createPropertyPoint(
+    # 'PropertyPoint' input values
+    data: PropertyPointInput!
+  ): PropertyPoint!
+  # Create a new document in the collection of 'User'
+  createUser(
+    # 'User' input values
+    data: UserInput!
+  ): User!
+  # Create a new document in the collection of 'Contact'
+  createContact(
+    # 'Contact' input values
+    data: ContactInput!
+  ): Contact!
+  incrementPropertyPoint(
+    pointNo: Int!
+    propertyPointId: ID!
+    rate: Float!
+  ): PropertyPoint!
+  # Update an existing document in the collection of 'Property'
+  updateProperty(
+    # The 'Property' document's ID
+    id: ID!
+    # 'Property' input values
+    data: PropertyInput!
+  ): Property
+  # Delete an existing document in the collection of 'Property'
+  deleteProperty(
+    # The 'Property' document's ID
+    id: ID!
+  ): Property
+  # Update an existing document in the collection of 'Contact'
+  updateContact(
+    # The 'Contact' document's ID
+    id: ID!
+    # 'Contact' input values
+    data: ContactInput!
+  ): Contact
+  # Update an existing document in the collection of 'PropertyPoint'
+  updatePropertyPoint(
+    # The 'PropertyPoint' document's ID
+    id: ID!
+    # 'PropertyPoint' input values
+    data: PropertyPointInput!
+  ): PropertyPoint
+  # Create a new document in the collection of 'Property'
+  createProperty(
+    # 'Property' input values
+    data: PropertyInput!
+  ): Property!
+  # Delete an existing document in the collection of 'Contact'
+  deleteContact(
+    # The 'Contact' document's ID
+    id: ID!
+  ): Contact
+  # Delete an existing document in the collection of 'User'
+  deleteUser(
+    # The 'User' document's ID
+    id: ID!
+  ): User
+  # Delete an existing document in the collection of 'PropertyPoint'
+  deletePropertyPoint(
+    # The 'PropertyPoint' document's ID
+    id: ID!
+  ): PropertyPoint
+}
+
+type Property {
+  city: String!
+  state: String!
+  pointCount: Int!
+  description: String!
+  costType: CostType!
+  # The document's ID.
+  _id: ID!
+  featured: Boolean!
+  costValue: Int!
+  owner: User!
+  title: String!
+  images: [String!]!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Property' input values
+input PropertyInput {
+  pointCount: Int!
+  title: String!
+  city: String!
+  state: String!
+  costValue: Int!
+  costType: CostType!
+  owner: PropertyOwnerRelation
+  images: [String!]!
+  description: String!
+  featured: Boolean!
+}
+
+# Allow manipulating the relationship between the types 'Property' and 'User' using the field 'Property.owner'.
+input PropertyOwnerRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
+
+# The pagination object for elements of type 'Property'.
+type PropertyPage {
+  # The elements of type 'Property' in this page.
+  data: [Property]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+type PropertyPoint {
+  impressions: Int!
+  propertyTitle: String!
+  profit: Float!
+  # The document's ID.
+  _id: ID!
+  propertyId: ID!
+  userId: ID!
+  user: User!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'PropertyPoint' input values
+input PropertyPointInput {
+  user: PropertyPointUserRelation
+  userId: ID!
+  profit: Float!
+  impressions: Int!
+  propertyTitle: String!
+  propertyId: ID!
+}
+
+# The pagination object for elements of type 'PropertyPoint'.
+type PropertyPointPage {
+  # The elements of type 'PropertyPoint' in this page.
+  data: [PropertyPoint]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'PropertyPoint' and 'User' using the field 'PropertyPoint.user'.
+input PropertyPointUserRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
+
+type Query {
+  findPropertyByFeatured(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+    featured: Boolean!
+  ): PropertyPage!
+  # Find a document from the collection of 'Property' by its id.
+  findPropertyByID(
+    # The 'Property' document's ID
+    id: ID!
+  ): Property
+  findPropertyPointByPropertyId(propertyId: ID!): PropertyPoint
+  findUserByEmail(email: String!): User
+  findPropertyPointByPropertyIdAndUserId(
+    propertyId: ID!
+    userId: ID!
+  ): PropertyPoint
+  # Find a document from the collection of 'User' by its id.
+  findUserByID(
+    # The 'User' document's ID
+    id: ID!
+  ): User
+  # Find a document from the collection of 'PropertyPoint' by its id.
+  findPropertyPointByID(
+    # The 'PropertyPoint' document's ID
+    id: ID!
+  ): PropertyPoint
+  findFeaturedProperties(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): PropertyPage!
+  # Find a document from the collection of 'Contact' by its id.
+  findContactByID(
+    # The 'Contact' document's ID
+    id: ID!
+  ): Contact
+  findPropertiesByCostType(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+    costType: CostType!
+  ): PropertyPage!
+}
+
+scalar Time
+
+type User {
+  name: String!
+  email: String!
+  # The document's ID.
+  _id: ID!
+  tin: String
+  contacts(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): ContactPage!
+  properties(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): PropertyPage!
+  cac: String
+  type: UserType!
+  propertyPoints(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): PropertyPointPage!
+  phone: String!
+  password: String!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'User' and 'Contact'.
+input UserContactsRelation {
+  # Create one or more documents of type 'Contact' and associate them with the current document.
+  create: [ContactInput]
+  # Connect one or more documents of type 'Contact' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Contact' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'User' input values
+input UserInput {
+  email: String!
+  phone: String!
+  name: String!
+  password: String!
+  properties: UserPropertiesRelation
+  type: UserType!
+  cac: String
+  tin: String
+  contacts: UserContactsRelation
+  propertyPoints: UserPropertyPointsRelation
+}
+
+# Allow manipulating the relationship between the types 'User' and 'Property'.
+input UserPropertiesRelation {
+  # Create one or more documents of type 'Property' and associate them with the current document.
+  create: [PropertyInput]
+  # Connect one or more documents of type 'Property' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Property' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'User' and 'PropertyPoint'.
+input UserPropertyPointsRelation {
+  # Create one or more documents of type 'PropertyPoint' and associate them with the current document.
+  create: [PropertyPointInput]
+  # Connect one or more documents of type 'PropertyPoint' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'PropertyPoint' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+enum UserType {
+  Agency
+  Individual
+}
+

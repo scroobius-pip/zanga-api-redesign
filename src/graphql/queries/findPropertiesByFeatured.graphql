@@ -1,0 +1,20 @@
+query featuredProperties {
+ findPropertyByFeatured(featured:true){
+    data{
+      city
+      state
+      description
+      costType
+      costValue
+      featured
+      id:_id
+      owner{
+        name
+        id:_id
+      }
+      images
+      title
+    
+    }
+  }
+}

@@ -1,0 +1,13 @@
+# https://oss.prisma.io/graphqlgen/
+language: typescript
+
+schema: ./src/schema/schema.graphql
+context: ./src/types/types.d.ts:Context
+models:
+  files:
+    - ./src/types/models.d.ts
+
+output: ./generated/graphqlgen.ts
+resolver-scaffolding:
+  output: ./generated/tmp-resolvers/
+  layout: file-per-type

@@ -1,0 +1,15 @@
+mutation createProperty ($property:PropertyInput!){
+     createProperty(data:$property){
+            city
+            state
+            costType
+            costValue
+            description
+            images
+            title
+            owner{
+                 name
+            }
+            id:_id
+     }
+}

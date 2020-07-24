@@ -1,0 +1,18 @@
+mutation createPropertyPoint ($data: PropertyPointInput!){
+createPropertyPoint(data:$data){
+    id:_id
+}
+}
+
+# mutation createPropertyPoint ($userId:ID,$data: UserPropertyPointsRelation!){
+#  partialUpdateUser(id:$userId,
+#     data:$data){
+#     propertyPoints{
+#        data{
+#         propertyId
+#         id:_id
+#       }
+      
+#     }
+#   }
+# }

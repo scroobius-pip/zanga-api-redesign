@@ -1,0 +1,24 @@
+{
+    "name": "zanga-api",
+    "alias": "zanga-api.now.sh",
+    "version": 2,
+    "builds": [
+        {
+            "src": "dist/src/index.js",
+            "use": "@now/node",
+            "config": {
+                "maxLambdaSize": "50mb"
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/.*",
+            "dest": "dist/src/index.js"
+        }
+    ],
+    "env": {
+        "FAUNADB_SECRET": "fnADlApZ7NACAuiRemEE27hxDdRPMZ_0HfrP2n-1",
+        "JWT_SECRET": "test"
+    }
+}

@@ -1,0 +1,6 @@
+query propertyPoint($propertyId:ID!,$userId:ID!) {
+  findPropertyPointByPropertyIdAndUserId(propertyId:$propertyId,userId:$userId){
+    id:_id
+    profit
+  }
+}
