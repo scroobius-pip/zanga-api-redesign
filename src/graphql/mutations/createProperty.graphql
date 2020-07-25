@@ -5,7 +5,10 @@ mutation createProperty ($property:PropertyInput!){
             costType
             costValue
             description
-            images
+            images{
+                 previewUrl
+                 url
+            }
             title
             owner{
                  name

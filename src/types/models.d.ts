@@ -8,6 +8,7 @@ export interface User {
     name: string
     type: UserType,
     point: Maybe<UserPoint>
+    properties: Maybe<Property[]>
 }
 
 
@@ -15,11 +16,11 @@ export interface User {
 export interface Property {
     id: string
     title: string
-    city: string
+    // city: string
     state: string
     costValue: number
-    owner: Pick<User, 'id' | 'name'>
-    images: string[]
+    owner: Pick<User, 'id' | 'name' | 'phone'>
+    images: Array<{ url: string, previewUrl: string }>
     description: string
 }
 
@@ -30,7 +31,7 @@ export interface Location {
     state: string
 }
 
-type UserType = "Agency" | "Individual"
+type UserType = "Agency" | "Individual" | "Unassigned"
 
 export interface Cost {
     value: number
@@ -59,4 +60,9 @@ export interface PropertyPoint {
     propertyTitle: string
     points: number
     profit: number
+}
+
+export interface Image {
+    url: string
+    previewUrl: string
 }

@@ -1,5 +1,6 @@
 import { getSdk } from '../../generated/sdk'
 export interface Context {
-    userId: string
+    userEmail: string
     client: ReturnType<typeof getSdk>
 }
+

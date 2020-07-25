@@ -6,23 +6,19 @@ import { Resolvers } from "../graphqlgen";
 import { Query } from "./Query";
 import { User } from "./User";
 import { Property } from "./Property";
-import { UserPoint } from "./UserPoint";
-import { PropertyPoint } from "./PropertyPoint";
+import { Image } from "./Image";
 import { Mutation } from "./Mutation";
-import { RegisterResult } from "./RegisterResult";
-import { LoginResult } from "./LoginResult";
 import { Location } from "./Location";
 import { Cost } from "./Cost";
+import { PropertyPoint } from "./PropertyPoint";
 
 export const resolvers: Resolvers = {
   Query,
   User,
   Property,
-  UserPoint,
-  PropertyPoint,
+  Image,
   Mutation,
-  RegisterResult,
-  LoginResult,
   Location,
-  Cost
+  Cost,
+  PropertyPoint
 };

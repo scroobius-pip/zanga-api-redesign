@@ -7,55 +7,6 @@ directive @resolver(
 ) on FIELD_DEFINITION
 directive @relation(name: String) on FIELD_DEFINITION
 directive @unique(index: String) on FIELD_DEFINITION
-type Contact {
-  number: String!
-  name: String!
-  email: String
-  # The document's ID.
-  _id: ID!
-  to: User!
-  property: Property!
-  notes: String
-  # The document's timestamp.
-  _ts: Long!
-}
-
-# 'Contact' input values
-input ContactInput {
-  name: String!
-  number: String!
-  property: ContactPropertyRelation
-  email: String
-  notes: String
-  to: ContactToRelation
-}
-
-# The pagination object for elements of type 'Contact'.
-type ContactPage {
-  # The elements of type 'Contact' in this page.
-  data: [Contact]!
-  # A cursor for elements coming after the current page.
-  after: String
-  # A cursor for elements coming before the current page.
-  before: String
-}
-
-# Allow manipulating the relationship between the types 'Contact' and 'Property' using the field 'Contact.property'.
-input ContactPropertyRelation {
-  # Create a document of type 'Property' and associate it with the current document.
-  create: PropertyInput
-  # Connect a document of type 'Property' with the current document using its ID.
-  connect: ID
-}
-
-# Allow manipulating the relationship between the types 'Contact' and 'User' using the field 'Contact.to'.
-input ContactToRelation {
-  # Create a document of type 'User' and associate it with the current document.
-  create: UserInput
-  # Connect a document of type 'User' with the current document using its ID.
-  connect: ID
-}
-
 enum CostType {
   Rent
   Sale
@@ -63,7 +14,19 @@ enum CostType {
 
 scalar Date
 
+type Image {
+  previewUrl: String!
+  url: String!
+}
+
+# 'Image' input values
+input ImageInput {
+  previewUrl: String!
+  url: String!
+}
+
 # The `Long` scalar type
+#  represents non-fractional signed whole numeric values.
 # Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
@@ -85,11 +48,6 @@ type Mutation {
     # 'User' input values
     data: UserInput!
   ): User!
-  # Create a new document in the collection of 'Contact'
-  createContact(
-    # 'Contact' input values
-    data: ContactInput!
-  ): Contact!
   incrementPropertyPoint(
     pointNo: Int!
     propertyPointId: ID!
@@ -107,13 +65,15 @@ type Mutation {
     # The 'Property' document's ID
     id: ID!
   ): Property
-  # Update an existing document in the collection of 'Contact'
-  updateContact(
-    # The 'Contact' document's ID
+  # Partially updates an existing document in the collection of 'PropertyPoint'.
+  # It only modifies the values that are specified in the arguments. During
+  # execution, it verifies that required fields are not set to 'null'.
+  partialUpdatePropertyPoint(
+    # The 'PropertyPoint' document's ID
     id: ID!
-    # 'Contact' input values
-    data: ContactInput!
-  ): Contact
+    # 'PropertyPoint' input values
+    data: PartialUpdatePropertyPointInput!
+  ): PropertyPoint
   # Update an existing document in the collection of 'PropertyPoint'
   updatePropertyPoint(
     # The 'PropertyPoint' document's ID
@@ -126,11 +86,15 @@ type Mutation {
     # 'Property' input values
     data: PropertyInput!
   ): Property!
-  # Delete an existing document in the collection of 'Contact'
-  deleteContact(
-    # The 'Contact' document's ID
+  # Partially updates an existing document in the collection of 'Property'. It
+  # only modifies the values that are specified in the arguments. During
+  # execution, it verifies that required fields are not set to 'null'.
+  partialUpdateProperty(
+    # The 'Property' document's ID
     id: ID!
-  ): Contact
+    # 'Property' input values
+    data: PartialUpdatePropertyInput!
+  ): Property
   # Delete an existing document in the collection of 'User'
   deleteUser(
     # The 'User' document's ID
@@ -141,37 +105,97 @@ type Mutation {
     # The 'PropertyPoint' document's ID
     id: ID!
   ): PropertyPoint
+  # Partially updates an existing document in the collection of 'User'. It only
+  # modifies the values that are specified in the arguments. During execution, it
+  # verifies that required fields are not set to 'null'.
+  partialUpdateUser(
+    # The 'User' document's ID
+    id: ID!
+    # 'User' input values
+    data: PartialUpdateUserInput!
+  ): User
+}
+
+# 'Image' input values
+input PartialUpdateImageInput {
+  previewUrl: String
+  url: String
+}
+
+# 'Property' input values
+input PartialUpdatePropertyInput {
+  bounty: Float
+  remainingExpense: Float
+  visits: Int
+  title: String
+  city: String
+  state: String
+  costValue: Int
+  costType: CostType
+  owner: PropertyOwnerRelation
+  images: [PartialUpdateImageInput!]
+  description: String
+  featured: Boolean
+  slug: String
+}
+
+# 'PropertyPoint' input values
+input PartialUpdatePropertyPointInput {
+  user: PropertyPointUserRelation
+  userId: ID
+  profit: Float
+  impressions: Int
+  propertyTitle: String
+  propertyId: ID
+}
+
+# 'User' input values
+input PartialUpdateUserInput {
+  phone: String
+  balance: Float
+  email: String
+  name: String
+  properties: UserPropertiesRelation
+  type: UserType
+  userId: ID
+  propertyPoints: UserPropertyPointsRelation
 }
 
 type Property {
+  visits: Int!
   city: String!
   state: String!
-  pointCount: Int!
+  remainingExpense: Float!
   description: String!
   costType: CostType!
   # The document's ID.
   _id: ID!
-  featured: Boolean!
+  featured: Boolean
+  slug: String!
   costValue: Int!
+  bounty: Float!
   owner: User!
   title: String!
-  images: [String!]!
+  images: [Image!]
   # The document's timestamp.
   _ts: Long!
 }
 
 # 'Property' input values
 input PropertyInput {
-  pointCount: Int!
+  bounty: Float!
+  remainingExpense: Float!
+  visits: Int!
   title: String!
   city: String!
   state: String!
   costValue: Int!
   costType: CostType!
   owner: PropertyOwnerRelation
-  images: [String!]!
+  images: [ImageInput!]
   description: String!
-  featured: Boolean!
+  featured: Boolean
+  slug: String!
 }
 
 # Allow manipulating the relationship between the types 'Property' and 'User' using the field 'Property.owner'.
@@ -246,8 +270,14 @@ type Query {
     # The 'Property' document's ID
     id: ID!
   ): Property
-  findPropertyPointByPropertyId(propertyId: ID!): PropertyPoint
   findUserByEmail(email: String!): User
+  findPropertyBySlug(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+    slug: String!
+  ): PropertyPage!
   findPropertyPointByPropertyIdAndUserId(
     propertyId: ID!
     userId: ID!
@@ -262,17 +292,6 @@ type Query {
     # The 'PropertyPoint' document's ID
     id: ID!
   ): PropertyPoint
-  findFeaturedProperties(
-    # The number of items to return per page.
-    _size: Int
-    # The pagination cursor.
-    _cursor: String
-  ): PropertyPage!
-  # Find a document from the collection of 'Contact' by its id.
-  findContactByID(
-    # The 'Contact' document's ID
-    id: ID!
-  ): Contact
   findPropertiesByCostType(
     # The number of items to return per page.
     _size: Int
@@ -289,20 +308,14 @@ type User {
   email: String!
   # The document's ID.
   _id: ID!
-  tin: String
-  contacts(
-    # The number of items to return per page.
-    _size: Int
-    # The pagination cursor.
-    _cursor: String
-  ): ContactPage!
+  balance: Float!
   properties(
     # The number of items to return per page.
     _size: Int
     # The pagination cursor.
     _cursor: String
   ): PropertyPage!
-  cac: String
+  userId: ID!
   type: UserType!
   propertyPoints(
     # The number of items to return per page.
@@ -310,33 +323,20 @@ type User {
     # The pagination cursor.
     _cursor: String
   ): PropertyPointPage!
-  phone: String!
-  password: String!
+  phone: String
   # The document's timestamp.
   _ts: Long!
 }
 
-# Allow manipulating the relationship between the types 'User' and 'Contact'.
-input UserContactsRelation {
-  # Create one or more documents of type 'Contact' and associate them with the current document.
-  create: [ContactInput]
-  # Connect one or more documents of type 'Contact' with the current document using their IDs.
-  connect: [ID]
-  # Disconnect the given documents of type 'Contact' from the current document using their IDs.
-  disconnect: [ID]
-}
-
 # 'User' input values
 input UserInput {
+  phone: String
+  balance: Float!
   email: String!
-  phone: String!
   name: String!
-  password: String!
   properties: UserPropertiesRelation
   type: UserType!
-  cac: String
-  tin: String
-  contacts: UserContactsRelation
+  userId: ID!
   propertyPoints: UserPropertyPointsRelation
 }
 
@@ -363,5 +363,6 @@ input UserPropertyPointsRelation {
 enum UserType {
   Agency
   Individual
+  Unassigned
 }
 

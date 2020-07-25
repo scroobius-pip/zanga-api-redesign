@@ -6,9 +6,10 @@ import { getSdk } from '../generated/sdk'
 import { Context } from './types/types'
 import resolvers from './resolvers'
 import getJwtSecret from './functions/getJwtSecret';
+import findOrCreateUser from './functions/findOrCreateUser';
 
 
-const client = getSdk(new GraphQLClient('https://graphql.fauna.com/graphql', {
+export const client = getSdk(new GraphQLClient('https://graphql.fauna.com/graphql', {
     headers: {
         Authorization: 'Bearer ' + process.env.FAUNADB_SECRET
     }
@@ -23,31 +24,38 @@ const cors = microCors({
         'Authorization', 'Accept', 'token']
 })
 
-const getIdFromToken = (token: string) => {
+const getUserFromToken = async (token: string) => {
     try {
         if (token) {
-            const { userId = '' } = jwt.verify(token, getJwtSecret()) as { userId?: string }
-            return userId
+            const { email = '', name = '' } = await jwt.verify(token, getJwtSecret()) as { email?: string, name?: string }
+            return { email, name }
         }
-        return ''
+        return null
     } catch (error) {
-        return ''
+        return null
     }
 }
 
 const server = new ApolloServer({
     playground: true,
-    introspection: true,
+    // introspection: true,
     // mocks: true,
     resolvers: resolvers as any,
     typeDefs: gqlSchema,
-    context: ({ req }: { req: any }): Context => {
+    context: async ({ req }: { req: any }): Promise<Context> => {
         const tokenWithBearer = req.headers.authorization || ''
         const token = tokenWithBearer.split(' ')[1]
-        const userId = getIdFromToken(token)
+        const user = await getUserFromToken(token)
+        if (!user) {
+            return {
+                client,
+                userEmail: ''
+            }
+        }
+
         return {
             client,
-            userId
+            userEmail: await findOrCreateUser(user.email, user.name)
         }
     }
 })
@@ -60,3 +68,4 @@ export default cors((req, res) => {
     }
     return server.createHandler()(req, res)
 })
+

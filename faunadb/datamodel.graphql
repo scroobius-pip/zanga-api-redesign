@@ -1,15 +1,12 @@
 
 type User {
-
+phone:String
+balance:Float!
 email: String! @unique
-phone: String! @unique
 name: String! @unique
-password: String!
 properties: [Property!] @relation
 type:UserType!
-cac: String @unique
-tin: String @unique
-contacts: [Contact!] @relation
+userId: ID! @unique
 propertyPoints: [PropertyPoint!] @relation
 }
 
@@ -22,27 +19,39 @@ type PropertyPoint {
   propertyId:ID!
 }
 
-type Contact {
-
-  name: String!
-  number: String!
-  property: Property! @relation
-  email: String
-  notes: String
-  to:User!
-}
+# type Contact {
+#   name: String!
+#   number: String!
+#   property: Property! @relation
+#   email: String
+#   notes: String
+#   to:User!
+# }
 
 type Property {
-  pointCount: Int!
+  # pointCount: Int! ->bounty
+  
+  bounty: Float!
+  remainingExpense:Float!
+  visits: Int!
+
   title: String!
   city: String!
   state: String!
   costValue: Int!
   costType:CostType!
   owner:User!
-  images: [String!]!
+  images: [Image!] 
   description: String!
-  featured: Boolean!
+  featured: Boolean
+
+  slug:String!  @unique
+}
+
+type Image @embedded {
+previewUrl:String!
+url:String!
+# property:Property!
 }
 
 enum CostType {
@@ -54,14 +63,15 @@ enum CostType {
 enum UserType {
 Agency
 Individual
+Unassigned
 }
 
 type Query {
   findPropertiesByCostType(costType:CostType!):[Property!]!
-  
   findUserByEmail(email:String!):User
   findPropertyPointByPropertyIdAndUserId(propertyId:ID!,userId:ID!):PropertyPoint
   findPropertyByFeatured(featured:Boolean!):[Property!]
+  findPropertyBySlug(slug:String!):Property!
 }
 
 type Mutation {

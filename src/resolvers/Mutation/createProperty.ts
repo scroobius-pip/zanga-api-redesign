@@ -1,16 +1,17 @@
 import { MutationResolvers } from '../../../generated/graphqlgen';
 import { AuthenticationError } from 'apollo-server-core';
 import { CostType } from '../../../generated/sdk';
+import generateSlug from '../../functions/generateSlug';
 
 const createProperty: MutationResolvers.CreatePropertyResolver = async (_, { input }, ctx) => {
 
-    if (!ctx.userId) {
+    if (!ctx.userEmail) {
         throw new AuthenticationError('Token Not Passed')
     }
-    const { description, images, location: { city, state }, title, costType, costValue, featured } = input
+    const { description, images, location: { state }, title, costType, costValue, featured } = input
 
 
-    const owner = (await ctx.client.user({ id: ctx.userId })).findUserByID
+    const owner = (await ctx.client.findUserByEmail({ email: ctx.userEmail })).findUserByEmail
     if (!owner) throw new Error('Failed to get owner')
 
     const result = await ctx.client.createProperty({
@@ -19,13 +20,18 @@ const createProperty: MutationResolvers.CreatePropertyResolver = async (_, { inp
             costValue,
             description,
             images,
-            city,
+            // city,
+            visits: 0,
+            bounty: 0,
+            city: '',
+            remainingExpense: 0,
+            slug: generateSlug(title),
             state,
             featured,
             title,
-            pointCount: 1,
+            // pointCount: 1,
             owner: {
-                connect: ctx.userId
+                connect: owner.dbId
             }
         }
     })

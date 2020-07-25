@@ -1,38 +1,32 @@
-query userByEmail($email:String!){
-
-  findUserByEmail(email:$email){
-    id:_id
-    password
+query findUserByEmail($email:String!){
+  findUserByEmail(email:$email){    
+        email
+        phone
     name
+    userId
     type
-    phone
+    dbId:_id
+    balance
     properties{
-      data{
-        city
-        state
-        description
-        costType
-        costValue
-        id:_id
-        title
-        images
-         owner{
-        name
-        id:_id
+    data {
+      visits
+      city
+      state
+      remainingExpense
+      description
+      costType
+      costValue
+      slug
+      featured
+      bounty
+      title
+      images{
+        previewUrl
+        url
       }
-      }
-    }
-    email
-        propertyPoints{
-data {
-        impressions
-      profit
-      propertyTitle
-      propertyId
-      id:_id
-}
+      dbId:_id
       
     }
   }
-
+  }
 }
