@@ -1,16 +1,6 @@
 mutation incrementPropertyPoint($propertyPointId: ID!) {
 incrementPropertyPoint(propertyPointId:$propertyPointId){
     impressions
-    user{
-      balance
-    }
-    property {
-      remainingExpense
-      visits
-      expense
-      owner{
-        balance
-      }
-    }
+    
 }
 }

@@ -1,8 +1,22 @@
-// import { QueryResolvers } from '../../../generated/graphqlgen';
+import { QueryResolvers } from '../../../generated/graphqlgen';
 
-// const propertyResolver: QueryResolvers.PropertyResolver = async (_, args, ctx) => {
-//     if (!args.id.length) { throw new Error('Id Not Passed') }
-//     return (await (ctx.client.property({ id: args.id }))).findPropertyByID
-// }
+const propertyResolver: QueryResolvers.PropertyResolver = async (_, args, ctx) => {
 
-// export default propertyResolver
+    const property = (await ctx.client.property({ slug: args.slug })).findPropertyBySlug
+
+    return {
+        ...property,
+        expense: property?.expense ?? 0,
+        remainingExpense: property?.remainingExpense ?? 0,
+        bounty: property?.bounty ?? 0,
+        featured: !!(property?.featured),
+        owner: {
+            ...property.owner,
+            phone: property.owner?.phone ?? ''
+        },
+        images: property.images ?? []
+    }
+
+}
+
+export default propertyResolver

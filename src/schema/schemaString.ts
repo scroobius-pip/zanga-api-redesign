@@ -1,12 +1,17 @@
 
 const data = `type Query {
   me: User
+  properties(type: CostType!, state: String!, budget: Float): PropertyPage!
+  property(slug: String!): Property
+  featuredProperties: PropertyPage!
 }
 
 type Mutation {
   createProperty(input: CreatePropertyInput!): ID!
   deleteProperty(id: ID!): Boolean!
-  incrementPropertyView(referrerId: ID!, propertyId: ID!): Boolean!
+  incrementPropertyView(input: PropertyViewInput!): Boolean!
+  updateUser(input: UserInput!): User!
+  assignBounty(input: BountyInput!): Property!
 }
 
 type User {
@@ -18,10 +23,15 @@ type User {
   properties: [Property!]
 }
 
+input UserInput {
+  type: UserType
+}
+
 type Property {
   id: String!
-  bounty: Float!
-  remainingExpense: Float!
+  bounty: Float
+  expense: Float
+  remainingExpense: Float
   title: String!
   visits: Int!
   state: String
@@ -31,6 +41,7 @@ type Property {
   images: [Image!]
   description: String
   featured: Boolean
+  slug: String!
 }
 
 type Image {
@@ -74,9 +85,25 @@ type PropertyPoint {
   profit: Float!
 }
 
-input ViewProperty {
-  propertyId: String!
-  referrerId: String!
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type PropertyPage {
+  properties: [Property!]
+  pageInfo: PageInfo!
+}
+
+input BountyInput {
+  propertyId: ID!
+  expense: Float!
+  bounty: Float!
+}
+
+input PropertyViewInput {
+  referrerId: ID
+  propertyId: ID!
 }
 
 input CreatePropertyInput {

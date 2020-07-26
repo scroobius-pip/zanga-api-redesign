@@ -11,8 +11,6 @@ const createProperty: MutationResolvers.CreatePropertyResolver = async (_, { inp
     const { description, images, location: { state }, title, costType, costValue, featured } = input
 
 
-    // const owner = (await ctx.client.findUserByEmail({ email: ctx.userEmail })).findUserByEmail
-    // if (!owner) throw new Error('Failed to get owner')
 
     const result = await ctx.client.createProperty({
         property: {

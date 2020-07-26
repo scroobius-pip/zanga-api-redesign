@@ -57,11 +57,12 @@ Unassigned
 }
 
 type Query {
-  findPropertiesByCostType(costType:CostType!):[Property!]!
+  # findPropertiesByCostType(costType:CostType!):[Property!]!
   findUserByEmail(email:String!):User
   findPropertyPointByPropertyIdAndUserId(propertyId:ID!,userId:ID!):PropertyPoint
   findPropertyByFeatured(featured:Boolean!):[Property!]
-  findPropertyBySlug(slug:String!):Property!
+  findPropertyBySlug(slug:String!):Property
+  findPropertiesByCostTypeAndState(costType:CostType!,state:String!):[Property!]
 }
 
 type Mutation {

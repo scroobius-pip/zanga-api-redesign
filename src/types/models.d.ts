@@ -7,19 +7,33 @@ export interface User {
     phone: string
     name: string
     type: UserType,
-    point: Maybe<UserPoint>
-    properties: Maybe<Property[]>
+    sharedProperties: Maybe<PropertyShare[]>
+    postedProperties: Maybe<Property[]>
+}
+
+export interface PropertyPage {
+    properties: Property[]
+    pageInfo: PageInfo
+
+}
+export interface PageInfo {
+    after: Maybe<string>
+    before: Maybe<string>
 }
 
 
-
 export interface Property {
-    id: string
+
+    slug: string
+    expense: number
+    remainingExpense: number
+    visits: number
+    bounty: number
     title: string
     // city: string
     state: string
     costValue: number
-    owner: Pick<User, 'id' | 'name' | 'phone'>
+    owner: Pick<User, 'name' | 'phone'>
     images: Array<{ url: string, previewUrl: string }>
     description: string
 }
@@ -50,15 +64,10 @@ export interface LoginResult {
     message: string
 }
 
-export interface UserPoint {
-    totalProfit: number
-    totalPoints: number
-    propertyPoints: PropertyPoint[]
-}
-export interface PropertyPoint {
-    propertyId: string
-    propertyTitle: string
-    points: number
+
+export interface PropertyShare {
+    property: Property
+    visits: number
     profit: number
 }
 
@@ -66,3 +75,12 @@ export interface Image {
     url: string
     previewUrl: string
 }
+
+export interface PropertyPoint {
+    propertyId: string
+    propertyTitle: string
+    points: number
+    profit: number
+}
+
+

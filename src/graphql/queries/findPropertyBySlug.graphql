@@ -1,0 +1,5 @@
+query property($slug:String!){
+  findPropertyBySlug(slug:$slug){
+ ...PropertyFields
+  }
+}

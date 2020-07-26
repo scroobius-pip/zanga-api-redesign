@@ -1,0 +1,32 @@
+fragment PropertyFields on Property {
+        visits
+    state
+    expense
+    remainingExpense
+    slug
+    featured
+    description
+    owner {
+      name
+      phone
+    }
+    costType
+    costValue
+    bounty
+    images{
+      previewUrl
+      url
+    }
+    title
+     dbId:_id
+}
+
+fragment UserFields on User {
+         email
+        phone
+    name
+    userId
+    type
+    dbId:_id
+    balance
+}

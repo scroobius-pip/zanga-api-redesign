@@ -1,0 +1,5 @@
+mutation updateUser($userId:ID!,$data: PartialUpdateUserInput!) {
+  partialUpdateUser(id:$userId,data:$data){
+    ...UserFields
+  }
+}

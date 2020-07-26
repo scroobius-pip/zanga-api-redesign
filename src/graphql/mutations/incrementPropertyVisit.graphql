@@ -1,0 +1,5 @@
+mutation  incrementPropertyVisit ($propertyId:ID!) {
+  incrementPropertyVisit(propertyId:$propertyId){
+    visits
+  }
+}

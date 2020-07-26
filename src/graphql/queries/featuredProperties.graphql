@@ -1,0 +1,7 @@
+query featuredProperties{
+  findPropertyByFeatured(_size:100,featured:true) {
+    data { 
+      ...PropertyFields
+    }
+  }
+}

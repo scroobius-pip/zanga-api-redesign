@@ -19,33 +19,12 @@ const meResolver: QueryResolvers.MeResolver = async (_, __, ctx) => {
         email: user.email,
         id: user.userId,
         name: user.name,
-        phone: user.phone,
+        phone: user?.phone ?? '',
         type: user.type,
-
+        sharedProperties: [],
+        postedProperties: []
         // id:
-    } as User
-    // return {
-    //     ...user,
-    //     properties: userProperties,
-    //     point: {
-    //         propertyPoints: (userPointsData).map(userPoint => {
-    //             return {
-    //                 points: userPoint?.impressions,
-    //                 profit: userPoint?.profit,
-    //                 propertyId: userPoint?.propertyId,
-    //                 propertyTitle: userPoint?.propertyTitle
-    //             }
-    //         }),
-    //         totalPoints: userPointsData.reduce((acc, val) => {
-    //             const impressions = val ? val.impressions : 0
-    //             return acc + impressions
-    //         }, 0),
-    //         totalProfit: userPointsData.reduce((acc, current) => {
-    //             const profit = current ? current.profit : 0
-    //             return acc + profit
-    //         }, 0),
-    //     }
-    // } as User
+    }
 }
 
 export default meResolver

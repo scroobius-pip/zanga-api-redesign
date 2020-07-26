@@ -7,10 +7,16 @@ type: UserType!
 properties: [Property!]
 }
 
+input UserInput {
+  type: UserType
+  name: String
+} 
+
 type Property {
   id: String!
-  bounty: Float!
-  remainingExpense:Float!
+  bounty: Float
+  expense: Float
+  remainingExpense:Float
   title: String!
   # city: String
   visits: Int!
@@ -21,6 +27,7 @@ type Property {
   images: [Image!]
   description: String
   featured:Boolean
+  slug: String!
 }
 
 type Image {
@@ -73,23 +80,50 @@ points: Int!
 profit: Float!
 }
 
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type PropertyPage {
+  properties:[Property!]
+  pageInfo: PageInfo!
+}
+
+
+
+input BountyInput {
+  propertyId:ID!
+  expense:Float!
+  bounty:Float!
+
+}
+
+input PropertyViewInput {
+  referrerId:ID
+  propertyId:ID!
+}
+
+input PropertiesInput {
+ type:CostType!
+ state:String!
+ budget:Float
+ cursor: String
+}
 
 type Query {
-me:User
-# properties(type:CostType!):[Property]!
-# property(id:ID!):Property
-# featuredProperties:[Property]!
+    me:User
+    properties(input:PropertiesInput!):PropertyPage!
+    property(slug:String!):Property
+    featuredProperties:PropertyPage!
 }
 
 type Mutation {
     createProperty(input:CreatePropertyInput!):ID!
     deleteProperty(id:ID!):Boolean!
-    incrementPropertyView(referrerId:ID!,propertyId:ID!):Boolean!
-}
-
-input ViewProperty {
-  propertyId:String!
-  referrerId: String!
+    incrementPropertyView(input:PropertyViewInput!):Boolean
+    updateUser(input:UserInput!):Boolean!
+    assignBounty(input:BountyInput!):Boolean!
 }
 
 

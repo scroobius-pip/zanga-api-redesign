@@ -52,6 +52,7 @@ export type Mutation = {
   createPropertyPoint: PropertyPoint,
   /** Create a new document in the collection of 'User' */
   createUser: User,
+  incrementPropertyVisit: Property,
   incrementPropertyPoint: PropertyPoint,
   /** Update an existing document in the collection of 'Property' */
   updateProperty?: Maybe<Property>,
@@ -63,6 +64,7 @@ export type Mutation = {
    * execution, it verifies that required fields are not set to 'null'.
  */
   partialUpdatePropertyPoint?: Maybe<PropertyPoint>,
+  addUserBalance: Scalars['Float'],
   /** Update an existing document in the collection of 'PropertyPoint' */
   updatePropertyPoint?: Maybe<PropertyPoint>,
   /** Create a new document in the collection of 'Property' */
@@ -83,6 +85,7 @@ export type Mutation = {
    * verifies that required fields are not set to 'null'.
  */
   partialUpdateUser?: Maybe<User>,
+  subtractUserBalance: Scalars['Float'],
 };
 
 
@@ -99,6 +102,11 @@ export type MutationCreatePropertyPointArgs = {
 
 export type MutationCreateUserArgs = {
   data: UserInput
+};
+
+
+export type MutationIncrementPropertyVisitArgs = {
+  propertyId: Scalars['ID']
 };
 
 
@@ -121,6 +129,12 @@ export type MutationDeletePropertyArgs = {
 export type MutationPartialUpdatePropertyPointArgs = {
   id: Scalars['ID'],
   data: PartialUpdatePropertyPointInput
+};
+
+
+export type MutationAddUserBalanceArgs = {
+  userId: Scalars['ID'],
+  value: Scalars['Float']
 };
 
 
@@ -156,6 +170,12 @@ export type MutationPartialUpdateUserArgs = {
   data: PartialUpdateUserInput
 };
 
+
+export type MutationSubtractUserBalanceArgs = {
+  userId: Scalars['ID'],
+  value: Scalars['Float']
+};
+
 /** 'Image' input values */
 export type PartialUpdateImageInput = {
   previewUrl?: Maybe<Scalars['String']>,
@@ -187,6 +207,7 @@ export type PartialUpdatePropertyPointInput = {
   userId?: Maybe<Scalars['ID']>,
   propertyId?: Maybe<Scalars['ID']>,
   impressions?: Maybe<Scalars['Int']>,
+  profit?: Maybe<Scalars['Float']>,
 };
 
 /** 'User' input values */
@@ -205,7 +226,7 @@ export type Property = {
    __typename?: 'Property',
   visits: Scalars['Int'],
   city: Scalars['String'],
-  expense: Scalars['Float'],
+  expense?: Maybe<Scalars['Float']>,
   state: Scalars['String'],
   remainingExpense: Scalars['Float'],
   description: Scalars['String'],
@@ -228,7 +249,7 @@ export type PropertyInput = {
   bounty: Scalars['Float'],
   remainingExpense: Scalars['Float'],
   visits: Scalars['Int'],
-  expense: Scalars['Float'],
+  expense?: Maybe<Scalars['Float']>,
   title: Scalars['String'],
   city: Scalars['String'],
   state: Scalars['String'],
@@ -263,6 +284,7 @@ export type PropertyPage = {
 export type PropertyPoint = {
    __typename?: 'PropertyPoint',
   impressions: Scalars['Int'],
+  profit: Scalars['Float'],
   /** The document's ID. */
   _id: Scalars['ID'],
   propertyId: Scalars['ID'],
@@ -280,6 +302,7 @@ export type PropertyPointInput = {
   userId: Scalars['ID'],
   propertyId: Scalars['ID'],
   impressions: Scalars['Int'],
+  profit: Scalars['Float'],
 };
 
 /** The pagination object for elements of type 'PropertyPoint'. */
@@ -315,10 +338,11 @@ export type PropertyPointUserRelation = {
 export type Query = {
    __typename?: 'Query',
   findPropertyByFeatured: PropertyPage,
+  findPropertiesByCostTypeAndState: PropertyPage,
   /** Find a document from the collection of 'Property' by its id. */
   findPropertyByID?: Maybe<Property>,
   findUserByEmail?: Maybe<User>,
-  findPropertyBySlug: PropertyPage,
+  findPropertyBySlug: Property,
   findPropertyPointByPropertyIdAndUserId?: Maybe<PropertyPoint>,
   /** Find a document from the collection of 'User' by its id. */
   findUserByID?: Maybe<User>,
@@ -335,6 +359,14 @@ export type QueryFindPropertyByFeaturedArgs = {
 };
 
 
+export type QueryFindPropertiesByCostTypeAndStateArgs = {
+  _size?: Maybe<Scalars['Int']>,
+  _cursor?: Maybe<Scalars['String']>,
+  costType: CostType,
+  state: Scalars['String']
+};
+
+
 export type QueryFindPropertyByIdArgs = {
   id: Scalars['ID']
 };
@@ -346,8 +378,6 @@ export type QueryFindUserByEmailArgs = {
 
 
 export type QueryFindPropertyBySlugArgs = {
-  _size?: Maybe<Scalars['Int']>,
-  _cursor?: Maybe<Scalars['String']>,
   slug: Scalars['String']
 };
 
@@ -441,6 +471,25 @@ export enum UserType {
   Unassigned = 'Unassigned'
 }
 
+export type PropertyFieldsFragment = (
+  { __typename?: 'Property' }
+  & Pick<Property, 'visits' | 'state' | 'expense' | 'remainingExpense' | 'slug' | 'featured' | 'description' | 'costType' | 'costValue' | 'bounty' | 'title'>
+  & { dbId: Property['_id'] }
+  & { owner: (
+    { __typename?: 'User' }
+    & Pick<User, 'name' | 'phone'>
+  ), images: Maybe<Array<(
+    { __typename?: 'Image' }
+    & Pick<Image, 'previewUrl' | 'url'>
+  )>> }
+);
+
+export type UserFieldsFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'email' | 'phone' | 'name' | 'userId' | 'type' | 'balance'>
+  & { dbId: User['_id'] }
+);
+
 export type CreatePropertyMutationVariables = {
   property: PropertyInput
 };
@@ -512,18 +561,109 @@ export type IncrementPropertyPointMutation = (
   & { incrementPropertyPoint: (
     { __typename?: 'PropertyPoint' }
     & Pick<PropertyPoint, 'impressions'>
-    & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'balance'>
-    ), property: (
-      { __typename?: 'Property' }
-      & Pick<Property, 'remainingExpense' | 'visits' | 'expense'>
-      & { owner: (
-        { __typename?: 'User' }
-        & Pick<User, 'balance'>
-      ) }
-    ) }
   ) }
+);
+
+export type IncrementPropertyVisitMutationVariables = {
+  propertyId: Scalars['ID']
+};
+
+
+export type IncrementPropertyVisitMutation = (
+  { __typename?: 'Mutation' }
+  & { incrementPropertyVisit: (
+    { __typename?: 'Property' }
+    & Pick<Property, 'visits'>
+  ) }
+);
+
+export type UpdatePropertyMutationVariables = {
+  propertyId: Scalars['ID'],
+  data: PartialUpdatePropertyInput
+};
+
+
+export type UpdatePropertyMutation = (
+  { __typename?: 'Mutation' }
+  & { partialUpdateProperty: Maybe<(
+    { __typename?: 'Property' }
+    & PropertyFieldsFragment
+  )> }
+);
+
+export type UpdateUserMutationVariables = {
+  userId: Scalars['ID'],
+  data: PartialUpdateUserInput
+};
+
+
+export type UpdateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { partialUpdateUser: Maybe<(
+    { __typename?: 'User' }
+    & UserFieldsFragment
+  )> }
+);
+
+export type FeaturedPropertiesQueryVariables = {};
+
+
+export type FeaturedPropertiesQuery = (
+  { __typename?: 'Query' }
+  & { findPropertyByFeatured: (
+    { __typename?: 'PropertyPage' }
+    & { data: Array<Maybe<(
+      { __typename?: 'Property' }
+      & PropertyFieldsFragment
+    )>> }
+  ) }
+);
+
+export type PropertiesQueryVariables = {
+  type: CostType,
+  state: Scalars['String'],
+  cursor?: Maybe<Scalars['String']>,
+  size?: Maybe<Scalars['Int']>
+};
+
+
+export type PropertiesQuery = (
+  { __typename?: 'Query' }
+  & { findPropertiesByCostTypeAndState: (
+    { __typename?: 'PropertyPage' }
+    & Pick<PropertyPage, 'after' | 'before'>
+    & { data: Array<Maybe<(
+      { __typename?: 'Property' }
+      & PropertyFieldsFragment
+    )>> }
+  ) }
+);
+
+export type PropertyQueryVariables = {
+  slug: Scalars['String']
+};
+
+
+export type PropertyQuery = (
+  { __typename?: 'Query' }
+  & { findPropertyBySlug: (
+    { __typename?: 'Property' }
+    & PropertyFieldsFragment
+  ) }
+);
+
+export type FindPropertyPointQueryVariables = {
+  propertyId: Scalars['ID'],
+  userId: Scalars['ID']
+};
+
+
+export type FindPropertyPointQuery = (
+  { __typename?: 'Query' }
+  & { findPropertyPointByPropertyIdAndUserId: Maybe<(
+    { __typename?: 'PropertyPoint' }
+    & Pick<PropertyPoint, '_id'>
+  )> }
 );
 
 export type FindUserByEmailQueryVariables = {
@@ -535,24 +675,52 @@ export type FindUserByEmailQuery = (
   { __typename?: 'Query' }
   & { findUserByEmail: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'email' | 'phone' | 'name' | 'userId' | 'type' | 'balance'>
-    & { dbId: User['_id'] }
     & { properties: (
       { __typename?: 'PropertyPage' }
       & { data: Array<Maybe<(
         { __typename?: 'Property' }
-        & Pick<Property, 'visits' | 'city' | 'state' | 'remainingExpense' | 'description' | 'costType' | 'costValue' | 'slug' | 'featured' | 'bounty' | 'title'>
-        & { dbId: Property['_id'] }
-        & { images: Maybe<Array<(
-          { __typename?: 'Image' }
-          & Pick<Image, 'previewUrl' | 'url'>
-        )>> }
+        & PropertyFieldsFragment
       )>> }
     ) }
+    & UserFieldsFragment
   )> }
 );
 
-
+export const PropertyFieldsFragmentDoc = gql`
+    fragment PropertyFields on Property {
+  visits
+  state
+  expense
+  remainingExpense
+  slug
+  featured
+  description
+  owner {
+    name
+    phone
+  }
+  costType
+  costValue
+  bounty
+  images {
+    previewUrl
+    url
+  }
+  title
+  dbId: _id
+}
+    `;
+export const UserFieldsFragmentDoc = gql`
+    fragment UserFields on User {
+  email
+  phone
+  name
+  userId
+  type
+  dbId: _id
+  balance
+}
+    `;
 export const CreatePropertyDocument = gql`
     mutation createProperty($property: PropertyInput!) {
   createProperty(data: $property) {
@@ -599,53 +767,77 @@ export const IncrementPropertyPointDocument = gql`
     mutation incrementPropertyPoint($propertyPointId: ID!) {
   incrementPropertyPoint(propertyPointId: $propertyPointId) {
     impressions
-    user {
-      balance
+  }
+}
+    `;
+export const IncrementPropertyVisitDocument = gql`
+    mutation incrementPropertyVisit($propertyId: ID!) {
+  incrementPropertyVisit(propertyId: $propertyId) {
+    visits
+  }
+}
+    `;
+export const UpdatePropertyDocument = gql`
+    mutation updateProperty($propertyId: ID!, $data: PartialUpdatePropertyInput!) {
+  partialUpdateProperty(id: $propertyId, data: $data) {
+    ...PropertyFields
+  }
+}
+    ${PropertyFieldsFragmentDoc}`;
+export const UpdateUserDocument = gql`
+    mutation updateUser($userId: ID!, $data: PartialUpdateUserInput!) {
+  partialUpdateUser(id: $userId, data: $data) {
+    ...UserFields
+  }
+}
+    ${UserFieldsFragmentDoc}`;
+export const FeaturedPropertiesDocument = gql`
+    query featuredProperties {
+  findPropertyByFeatured(_size: 100, featured: true) {
+    data {
+      ...PropertyFields
     }
-    property {
-      remainingExpense
-      visits
-      expense
-      owner {
-        balance
-      }
+  }
+}
+    ${PropertyFieldsFragmentDoc}`;
+export const PropertiesDocument = gql`
+    query properties($type: CostType!, $state: String!, $cursor: String, $size: Int) {
+  findPropertiesByCostTypeAndState(costType: $type, state: $state, _cursor: $cursor, _size: $size) {
+    after
+    before
+    data {
+      ...PropertyFields
     }
+  }
+}
+    ${PropertyFieldsFragmentDoc}`;
+export const PropertyDocument = gql`
+    query property($slug: String!) {
+  findPropertyBySlug(slug: $slug) {
+    ...PropertyFields
+  }
+}
+    ${PropertyFieldsFragmentDoc}`;
+export const FindPropertyPointDocument = gql`
+    query findPropertyPoint($propertyId: ID!, $userId: ID!) {
+  findPropertyPointByPropertyIdAndUserId(propertyId: $propertyId, userId: $userId) {
+    _id
   }
 }
     `;
 export const FindUserByEmailDocument = gql`
     query findUserByEmail($email: String!) {
   findUserByEmail(email: $email) {
-    email
-    phone
-    name
-    userId
-    type
-    dbId: _id
-    balance
+    ...UserFields
     properties {
       data {
-        visits
-        city
-        state
-        remainingExpense
-        description
-        costType
-        costValue
-        slug
-        featured
-        bounty
-        title
-        images {
-          previewUrl
-          url
-        }
-        dbId: _id
+        ...PropertyFields
       }
     }
   }
 }
-    `;
+    ${UserFieldsFragmentDoc}
+${PropertyFieldsFragmentDoc}`;
 export function getSdk(client: GraphQLClient) {
   return {
     createProperty(variables: CreatePropertyMutationVariables): Promise<CreatePropertyMutation> {
@@ -662,6 +854,27 @@ export function getSdk(client: GraphQLClient) {
     },
     incrementPropertyPoint(variables: IncrementPropertyPointMutationVariables): Promise<IncrementPropertyPointMutation> {
       return client.request<IncrementPropertyPointMutation>(print(IncrementPropertyPointDocument), variables);
+    },
+    incrementPropertyVisit(variables: IncrementPropertyVisitMutationVariables): Promise<IncrementPropertyVisitMutation> {
+      return client.request<IncrementPropertyVisitMutation>(print(IncrementPropertyVisitDocument), variables);
+    },
+    updateProperty(variables: UpdatePropertyMutationVariables): Promise<UpdatePropertyMutation> {
+      return client.request<UpdatePropertyMutation>(print(UpdatePropertyDocument), variables);
+    },
+    updateUser(variables: UpdateUserMutationVariables): Promise<UpdateUserMutation> {
+      return client.request<UpdateUserMutation>(print(UpdateUserDocument), variables);
+    },
+    featuredProperties(variables?: FeaturedPropertiesQueryVariables): Promise<FeaturedPropertiesQuery> {
+      return client.request<FeaturedPropertiesQuery>(print(FeaturedPropertiesDocument), variables);
+    },
+    properties(variables: PropertiesQueryVariables): Promise<PropertiesQuery> {
+      return client.request<PropertiesQuery>(print(PropertiesDocument), variables);
+    },
+    property(variables: PropertyQueryVariables): Promise<PropertyQuery> {
+      return client.request<PropertyQuery>(print(PropertyDocument), variables);
+    },
+    findPropertyPoint(variables: FindPropertyPointQueryVariables): Promise<FindPropertyPointQuery> {
+      return client.request<FindPropertyPointQuery>(print(FindPropertyPointDocument), variables);
     },
     findUserByEmail(variables: FindUserByEmailQueryVariables): Promise<FindUserByEmailQuery> {
       return client.request<FindUserByEmailQuery>(print(FindUserByEmailDocument), variables);

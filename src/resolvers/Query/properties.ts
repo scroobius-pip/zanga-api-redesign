@@ -1,9 +1,19 @@
-// import { QueryResolvers } from '../../../generated/graphqlgen';
-// import { CostType } from '../../../generated/sdk';
+import { QueryResolvers } from '../../../generated/graphqlgen';
+import { CostType } from '../../../generated/sdk';
+import { mapDbPropertyToProperty } from './mapDbPropertyToProperty';
 
-// const propertiesResolver: QueryResolvers.PropertiesResolver = async (_, args, ctx) =>
-//     (await ctx.client.properties({ costType: CostType[args.type] }))
-//         .findPropertiesByCostType
-//         .data
+const propertiesResolver: QueryResolvers.PropertiesResolver = async (_, { input }, ctx) => {
+    const { cursor, state, type, budget } = input
 
-// export default propertiesResolver
+    const { data, after, before } = (await ctx.client.properties({ state, type: CostType[type], cursor, size: 25 })).findPropertiesByCostTypeAndState
+    return {
+        properties: data.map(mapDbPropertyToProperty),
+        pageInfo: {
+            after: after ?? '',
+            before: before ?? ''
+        }
+    }
+}
+
+
+export default propertiesResolver

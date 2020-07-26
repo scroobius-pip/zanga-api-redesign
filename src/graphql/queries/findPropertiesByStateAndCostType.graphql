@@ -1,0 +1,11 @@
+
+
+query properties($type:CostType!,$state:String!,$cursor:String,$size:Int){
+  findPropertiesByCostTypeAndState(costType:$type,state:$state,_cursor:$cursor,_size:$size){
+    after
+    before
+    data{
+     ...PropertyFields
+    }
+  }
+}

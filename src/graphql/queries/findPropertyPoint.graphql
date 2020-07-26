@@ -1,0 +1,5 @@
+query findPropertyPoint($propertyId:ID!,$userId:ID!){
+  findPropertyPointByPropertyIdAndUserId(propertyId:$propertyId,userId:$userId){
+  _id
+  }
+}

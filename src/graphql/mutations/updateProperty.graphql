@@ -1,0 +1,5 @@
+mutation updateProperty($propertyId:ID!,$data:PartialUpdatePropertyInput!) {
+  partialUpdateProperty(id:$propertyId,data:$data){
+    ...PropertyFields
+  }
+}

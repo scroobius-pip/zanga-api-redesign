@@ -48,6 +48,7 @@ type Mutation {
     # 'User' input values
     data: UserInput!
   ): User!
+  incrementPropertyVisit(propertyId: ID!): Property!
   incrementPropertyPoint(propertyPointId: ID!): PropertyPoint!
   # Update an existing document in the collection of 'Property'
   updateProperty(
@@ -70,6 +71,7 @@ type Mutation {
     # 'PropertyPoint' input values
     data: PartialUpdatePropertyPointInput!
   ): PropertyPoint
+  addUserBalance(userId: ID!, value: Float!): Float!
   # Update an existing document in the collection of 'PropertyPoint'
   updatePropertyPoint(
     # The 'PropertyPoint' document's ID
@@ -110,6 +112,7 @@ type Mutation {
     # 'User' input values
     data: PartialUpdateUserInput!
   ): User
+  subtractUserBalance(userId: ID!, value: Float!): Float!
 }
 
 # 'Image' input values
@@ -143,6 +146,7 @@ input PartialUpdatePropertyPointInput {
   userId: ID
   propertyId: ID
   impressions: Int
+  profit: Float
 }
 
 # 'User' input values
@@ -160,7 +164,7 @@ input PartialUpdateUserInput {
 type Property {
   visits: Int!
   city: String!
-  expense: Float!
+  expense: Float
   state: String!
   remainingExpense: Float!
   description: String!
@@ -183,7 +187,7 @@ input PropertyInput {
   bounty: Float!
   remainingExpense: Float!
   visits: Int!
-  expense: Float!
+  expense: Float
   title: String!
   city: String!
   state: String!
@@ -216,6 +220,7 @@ type PropertyPage {
 
 type PropertyPoint {
   impressions: Int!
+  profit: Float!
   # The document's ID.
   _id: ID!
   propertyId: ID!
@@ -233,6 +238,7 @@ input PropertyPointInput {
   userId: ID!
   propertyId: ID!
   impressions: Int!
+  profit: Float!
 }
 
 # The pagination object for elements of type 'PropertyPoint'.
@@ -270,19 +276,21 @@ type Query {
     _cursor: String
     featured: Boolean!
   ): PropertyPage!
+  findPropertiesByCostTypeAndState(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+    costType: CostType!
+    state: String!
+  ): PropertyPage!
   # Find a document from the collection of 'Property' by its id.
   findPropertyByID(
     # The 'Property' document's ID
     id: ID!
   ): Property
   findUserByEmail(email: String!): User
-  findPropertyBySlug(
-    # The number of items to return per page.
-    _size: Int
-    # The pagination cursor.
-    _cursor: String
-    slug: String!
-  ): PropertyPage!
+  findPropertyBySlug(slug: String!): Property!
   findPropertyPointByPropertyIdAndUserId(
     propertyId: ID!
     userId: ID!

@@ -1,32 +1,10 @@
 query findUserByEmail($email:String!){
   findUserByEmail(email:$email){    
-        email
-        phone
-    name
-    userId
-    type
-    dbId:_id
-    balance
+    ...UserFields
     properties{
-    data {
-      visits
-      city
-      state
-      remainingExpense
-      description
-      costType
-      costValue
-      slug
-      featured
-      bounty
-      title
-      images{
-        previewUrl
-        url
+      data {
+      ...PropertyFields  
       }
-      dbId:_id
-      
     }
-  }
   }
 }
