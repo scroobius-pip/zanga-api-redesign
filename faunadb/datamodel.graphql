@@ -24,7 +24,7 @@ type Property {
   bounty: Float!
   remainingExpense:Float!
   visits: Int!
-  expense:Float! #stores expense property has costed, shown to the agents
+  expense:Float #stores expense property has costed, shown to the agents
   title: String!
   city: String!
   state: String!
@@ -66,6 +66,7 @@ type Query {
 
 type Mutation {
   incrementPropertyPoint(propertyPointId:ID!): PropertyPoint! @resolver(name:"increment_property_point")
+  incrementPropertyVisit(propertyId:ID!):Property! @resolver(name:"increment_property_visit")
   addUserBalance(userId:ID!,value:Float!):Float! @resolver(name:"add_user_balance") #userId is the database id
   subtractUserBalance(userId:ID!,value:Float!):Float! @resolver(name:"sub_user_balance")
 
@@ -134,6 +135,25 @@ type PropertyPoint {
 #             })
 #           )
 #         )
+#       )
+#     )
+#   )
+# )
+
+
+# Query(
+#   Lambda(
+#     ["userId", "value"],
+#     Let(
+#       {
+#         user: Ref(Collection("User"), Var("userId")),
+#         balance: Select(["data", "balance"], Get(Var("user")))
+#       },
+#       Do(
+#         Update(Var("user"), {
+#           data: { balance: Add(Var("balance"), Var("value")) }
+#         }),
+#         Select(["data", "balance"], Get(Var("user")))
 #       )
 #     )
 #   )
