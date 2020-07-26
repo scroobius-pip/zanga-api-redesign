@@ -103,9 +103,7 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationIncrementPropertyPointArgs = {
-  pointNo: Scalars['Int'],
-  propertyPointId: Scalars['ID'],
-  rate: Scalars['Float']
+  propertyPointId: Scalars['ID']
 };
 
 
@@ -169,6 +167,7 @@ export type PartialUpdatePropertyInput = {
   bounty?: Maybe<Scalars['Float']>,
   remainingExpense?: Maybe<Scalars['Float']>,
   visits?: Maybe<Scalars['Int']>,
+  expense?: Maybe<Scalars['Float']>,
   title?: Maybe<Scalars['String']>,
   city?: Maybe<Scalars['String']>,
   state?: Maybe<Scalars['String']>,
@@ -184,11 +183,10 @@ export type PartialUpdatePropertyInput = {
 /** 'PropertyPoint' input values */
 export type PartialUpdatePropertyPointInput = {
   user?: Maybe<PropertyPointUserRelation>,
+  property?: Maybe<PropertyPointPropertyRelation>,
   userId?: Maybe<Scalars['ID']>,
-  profit?: Maybe<Scalars['Float']>,
-  impressions?: Maybe<Scalars['Int']>,
-  propertyTitle?: Maybe<Scalars['String']>,
   propertyId?: Maybe<Scalars['ID']>,
+  impressions?: Maybe<Scalars['Int']>,
 };
 
 /** 'User' input values */
@@ -207,6 +205,7 @@ export type Property = {
    __typename?: 'Property',
   visits: Scalars['Int'],
   city: Scalars['String'],
+  expense: Scalars['Float'],
   state: Scalars['String'],
   remainingExpense: Scalars['Float'],
   description: Scalars['String'],
@@ -229,6 +228,7 @@ export type PropertyInput = {
   bounty: Scalars['Float'],
   remainingExpense: Scalars['Float'],
   visits: Scalars['Int'],
+  expense: Scalars['Float'],
   title: Scalars['String'],
   city: Scalars['String'],
   state: Scalars['String'],
@@ -263,11 +263,10 @@ export type PropertyPage = {
 export type PropertyPoint = {
    __typename?: 'PropertyPoint',
   impressions: Scalars['Int'],
-  propertyTitle: Scalars['String'],
-  profit: Scalars['Float'],
   /** The document's ID. */
   _id: Scalars['ID'],
   propertyId: Scalars['ID'],
+  property: Property,
   userId: Scalars['ID'],
   user: User,
   /** The document's timestamp. */
@@ -277,11 +276,10 @@ export type PropertyPoint = {
 /** 'PropertyPoint' input values */
 export type PropertyPointInput = {
   user?: Maybe<PropertyPointUserRelation>,
+  property?: Maybe<PropertyPointPropertyRelation>,
   userId: Scalars['ID'],
-  profit: Scalars['Float'],
-  impressions: Scalars['Int'],
-  propertyTitle: Scalars['String'],
   propertyId: Scalars['ID'],
+  impressions: Scalars['Int'],
 };
 
 /** The pagination object for elements of type 'PropertyPoint'. */
@@ -293,6 +291,17 @@ export type PropertyPointPage = {
   after?: Maybe<Scalars['String']>,
   /** A cursor for elements coming before the current page. */
   before?: Maybe<Scalars['String']>,
+};
+
+/** 
+ * Allow manipulating the relationship between the types 'PropertyPoint' and
+ * 'Property' using the field 'PropertyPoint.property'.
+ */
+export type PropertyPointPropertyRelation = {
+  /** Create a document of type 'Property' and associate it with the current document. */
+  create?: Maybe<PropertyInput>,
+  /** Connect a document of type 'Property' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>,
 };
 
 /** Allow manipulating the relationship between the types 'PropertyPoint' and 'User' using the field 'PropertyPoint.user'. */
@@ -476,6 +485,7 @@ export type CreateUserMutation = (
   & { createUser: (
     { __typename?: 'User' }
     & Pick<User, 'email'>
+    & { dbId: User['_id'] }
   ) }
 );
 
@@ -493,9 +503,7 @@ export type DeletePropertyMutation = (
 );
 
 export type IncrementPropertyPointMutationVariables = {
-  pointNo: Scalars['Int'],
-  propertyPointId: Scalars['ID'],
-  rate: Scalars['Float']
+  propertyPointId: Scalars['ID']
 };
 
 
@@ -503,8 +511,18 @@ export type IncrementPropertyPointMutation = (
   { __typename?: 'Mutation' }
   & { incrementPropertyPoint: (
     { __typename?: 'PropertyPoint' }
-    & Pick<PropertyPoint, 'impressions' | 'profit' | 'propertyTitle'>
-    & { id: PropertyPoint['_id'] }
+    & Pick<PropertyPoint, 'impressions'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'balance'>
+    ), property: (
+      { __typename?: 'Property' }
+      & Pick<Property, 'remainingExpense' | 'visits' | 'expense'>
+      & { owner: (
+        { __typename?: 'User' }
+        & Pick<User, 'balance'>
+      ) }
+    ) }
   ) }
 );
 
@@ -566,6 +584,7 @@ export const CreateUserDocument = gql`
     mutation createUser($user: UserInput!) {
   createUser(data: $user) {
     email
+    dbId: _id
   }
 }
     `;
@@ -577,12 +596,20 @@ export const DeletePropertyDocument = gql`
 }
     `;
 export const IncrementPropertyPointDocument = gql`
-    mutation incrementPropertyPoint($pointNo: Int!, $propertyPointId: ID!, $rate: Float!) {
-  incrementPropertyPoint(pointNo: $pointNo, propertyPointId: $propertyPointId, rate: $rate) {
+    mutation incrementPropertyPoint($propertyPointId: ID!) {
+  incrementPropertyPoint(propertyPointId: $propertyPointId) {
     impressions
-    profit
-    propertyTitle
-    id: _id
+    user {
+      balance
+    }
+    property {
+      remainingExpense
+      visits
+      expense
+      owner {
+        balance
+      }
+    }
   }
 }
     `;

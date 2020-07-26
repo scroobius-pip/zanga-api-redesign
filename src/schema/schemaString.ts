@@ -20,7 +20,10 @@ type User {
 
 type Property {
   id: String!
+  bounty: Float!
+  remainingExpense: Float!
   title: String!
+  visits: Int!
   state: String
   costValue: Int!
   costType: CostType!

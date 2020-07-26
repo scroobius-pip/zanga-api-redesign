@@ -49,13 +49,15 @@ const server = new ApolloServer({
         if (!user) {
             return {
                 client,
-                userEmail: ''
+                userEmail: '',
+                userId: ''
             }
         }
-
+        const { email, userId } = await findOrCreateUser(user.email, user.name)
         return {
             client,
-            userEmail: await findOrCreateUser(user.email, user.name)
+            userId,
+            userEmail: email
         }
     }
 })

@@ -3,21 +3,13 @@ type User {
 phone:String
 balance:Float!
 email: String! @unique
-name: String! @unique
+name: String! 
 properties: [Property!] @relation
 type:UserType!
 userId: ID! @unique
 propertyPoints: [PropertyPoint!] @relation
 }
 
-type PropertyPoint {
-  user:User!
-  userId:ID!
-  profit: Float!
-  impressions: Int!
-  propertyTitle:String!
-  propertyId:ID!
-}
 
 # type Contact {
 #   name: String!
@@ -28,13 +20,11 @@ type PropertyPoint {
 #   to:User!
 # }
 
-type Property {
-  # pointCount: Int! ->bounty
-  
+type Property {  
   bounty: Float!
   remainingExpense:Float!
   visits: Int!
-
+  expense:Float! #stores expense property has costed, shown to the agents
   title: String!
   city: String!
   state: String!
@@ -75,40 +65,76 @@ type Query {
 }
 
 type Mutation {
-  incrementPropertyPoint(pointNo:Int!,propertyPointId:ID!,rate:Float!): PropertyPoint! @resolver(name:"increment_property_point")
+  incrementPropertyPoint(propertyPointId:ID!): PropertyPoint! @resolver(name:"increment_property_point")
+  addUserBalance(userId:ID!,value:Float!):Float! @resolver(name:"add_user_balance") #userId is the database id
+  subtractUserBalance(userId:ID!,value:Float!):Float! @resolver(name:"sub_user_balance")
 
 }
 
-# Query(Lambda(["pointNo","propertyId","rate"], 
-# Update(
-#   Ref(Collection("PropertyPoint"),Var("propertyId")),
-#   {
-#     data:{
-#       impressions:Add(
-#                 Select(
-#                     ['data','impressions'],
-#                     Get(
-#                         Ref(
-#                             Collection('PropertyPoint'),
-#                             Var("propertyId")
-#                         )
-#                     )
+type PropertyPoint {
+  user:User!
+  property: Property!
+  userId:ID!
+  propertyId:ID!
+  impressions: Int!
+  profit:Float!
+}
+
+
+
+# Query(
+#   Lambda(
+#     ["PropertyPointId"],
+#     Let(
+#       {
+#         propertyPoint: Ref(Collection("PropertyPoint"), Var("PropertyPointId")),
+#         property: Select(["data", "property"], Get(Var("propertyPoint"))),
+#         bounty: Select(["data", "bounty"], Get(Var("property"))),
+#         impressions: Select(["data", "impressions"], Get(Var("propertyPoint"))),
+#         visits: Select(["data", "visits"], Get(Var("property"))),
+#         user: Select(["data", "user"], Get(Var("propertyPoint"))),
+#         owner: Select(["data", "owner"], Get(Var("property"))),
+#         userBalance: Select(["data", "balance"], Get(Var("user"))),
+#         ownerBalance: Select(["data", "balance"], Get(Var("owner"))),
+#         remainingExpense: Select(
+#           ["data", "remainingExpense"],
+#           Get(Var("property"))
+#         ),
+#         expense: Select(["data", "expense"], Get(Var("property"))),
+#         profit: Select(["data", "profit"], Get(Var("propertyPoint")))
+#       },
+#       If(
+#         LT(Var("remainingExpense"), Var("bounty")),
+#         Update(Var("property"), { data: { remainingExpense: 0 } }),
+#         If(
+#           LT(Var("ownerBalance"), Var("bounty")),
+#           Abort("INSUFFICIENT_FUNDS"),
+#           Do(
+#             Update(Var("property"), {
+#               data: {
+#                 visits: Add(Var("visits"), 1),
+#                 remainingExpense: Subtract(
+#                   Var("remainingExpense"),
+#                   Var("bounty")
 #                 ),
-#                 Var("pointNo")
-#             ),
-#       profit:Add(
-#         Select(
-#           ['data','profit'],
-#           Get(
-#             Ref(
-#               Collection('PropertyPoint'),
-#               Var("propertyId")
-#               )
-#             )
-#           ),
-#           Multiply(Var("pointNo"),Var("rate"))
+#                 expense: Add(Var("expense"), Var("bounty"))
+#               }
+#             }),
+#             Update(Var("user"), {
+#               data: { balance: Add(Var("userBalance"), Var("bounty")) }
+#             }),
+#             Update(Var("owner"), {
+#               data: { balance: Subtract(Var("ownerBalance"), Var("bounty")) }
+#             }),
+#             Update(Var("propertyPoint"), {
+#               data: {
+#                 impressions: Add(Var("impressions"), 1),
+#                 profit: Add(Var("profit"), Var("bounty"))
+#               }
+#             })
+#           )
 #         )
-#     }
-#   }
+#       )
+#     )
 #   )
-# ))
+# )

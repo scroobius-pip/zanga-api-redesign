@@ -1,14 +1,16 @@
-mutation incrementPropertyPoint(
-    $pointNo: Int!,
-    $propertyPointId: ID!,
-    $rate: Float!) {
-incrementPropertyPoint(pointNo:$pointNo,
-propertyPointId:$propertyPointId,
-rate:$rate
-){
-impressions
-  profit
-  propertyTitle
-  id:_id
+mutation incrementPropertyPoint($propertyPointId: ID!) {
+incrementPropertyPoint(propertyPointId:$propertyPointId){
+    impressions
+    user{
+      balance
+    }
+    property {
+      remainingExpense
+      visits
+      expense
+      owner{
+        balance
+      }
+    }
 }
 }

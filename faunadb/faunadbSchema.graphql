@@ -48,11 +48,7 @@ type Mutation {
     # 'User' input values
     data: UserInput!
   ): User!
-  incrementPropertyPoint(
-    pointNo: Int!
-    propertyPointId: ID!
-    rate: Float!
-  ): PropertyPoint!
+  incrementPropertyPoint(propertyPointId: ID!): PropertyPoint!
   # Update an existing document in the collection of 'Property'
   updateProperty(
     # The 'Property' document's ID
@@ -127,6 +123,7 @@ input PartialUpdatePropertyInput {
   bounty: Float
   remainingExpense: Float
   visits: Int
+  expense: Float
   title: String
   city: String
   state: String
@@ -142,11 +139,10 @@ input PartialUpdatePropertyInput {
 # 'PropertyPoint' input values
 input PartialUpdatePropertyPointInput {
   user: PropertyPointUserRelation
+  property: PropertyPointPropertyRelation
   userId: ID
-  profit: Float
-  impressions: Int
-  propertyTitle: String
   propertyId: ID
+  impressions: Int
 }
 
 # 'User' input values
@@ -164,6 +160,7 @@ input PartialUpdateUserInput {
 type Property {
   visits: Int!
   city: String!
+  expense: Float!
   state: String!
   remainingExpense: Float!
   description: String!
@@ -186,6 +183,7 @@ input PropertyInput {
   bounty: Float!
   remainingExpense: Float!
   visits: Int!
+  expense: Float!
   title: String!
   city: String!
   state: String!
@@ -218,11 +216,10 @@ type PropertyPage {
 
 type PropertyPoint {
   impressions: Int!
-  propertyTitle: String!
-  profit: Float!
   # The document's ID.
   _id: ID!
   propertyId: ID!
+  property: Property!
   userId: ID!
   user: User!
   # The document's timestamp.
@@ -232,11 +229,10 @@ type PropertyPoint {
 # 'PropertyPoint' input values
 input PropertyPointInput {
   user: PropertyPointUserRelation
+  property: PropertyPointPropertyRelation
   userId: ID!
-  profit: Float!
-  impressions: Int!
-  propertyTitle: String!
   propertyId: ID!
+  impressions: Int!
 }
 
 # The pagination object for elements of type 'PropertyPoint'.
@@ -247,6 +243,15 @@ type PropertyPointPage {
   after: String
   # A cursor for elements coming before the current page.
   before: String
+}
+
+# Allow manipulating the relationship between the types 'PropertyPoint' and
+# 'Property' using the field 'PropertyPoint.property'.
+input PropertyPointPropertyRelation {
+  # Create a document of type 'Property' and associate it with the current document.
+  create: PropertyInput
+  # Connect a document of type 'Property' with the current document using its ID.
+  connect: ID
 }
 
 # Allow manipulating the relationship between the types 'PropertyPoint' and 'User' using the field 'PropertyPoint.user'.
