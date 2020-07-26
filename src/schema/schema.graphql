@@ -4,7 +4,7 @@ email: String!
 phone: String
 name: String!
 type: UserType!
-properties: [Property!]
+# properties: [Property!]
 }
 
 input UserInput {
@@ -74,15 +74,20 @@ type Cost {
 
 
 type PropertyPoint {
-propertyId:String!
+propertySlug:String!
 propertyTitle:String!
-points: Int!
+impressions: Int!
 profit: Float!
 }
 
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
+}
+
+type PropertyPointPage {
+  points:[PropertyPoint!]
+  pageInfo:PageInfo!
 }
 
 type PropertyPage {
@@ -111,8 +116,15 @@ input PropertiesInput {
  cursor: String
 }
 
+
+input PaginationInput {
+  cursor:String
+}
+
 type Query {
     me:User
+    postedProperties(input:PaginationInput):PropertyPage!
+    sharedProperties(input:PaginationInput):PropertyPointPage!
     properties(input:PropertiesInput!):PropertyPage!
     property(slug:String!):Property
     featuredProperties:PropertyPage!

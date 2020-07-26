@@ -1,7 +1,9 @@
 
 const data = `type Query {
   me: User
-  properties(type: CostType!, state: String!, budget: Float): PropertyPage!
+  postedProperties(input: PaginationInput): PropertyPage!
+  sharedProperties(input: PaginationInput): PropertyPointPage!
+  properties(input: PropertiesInput!): PropertyPage!
   property(slug: String!): Property
   featuredProperties: PropertyPage!
 }
@@ -9,9 +11,9 @@ const data = `type Query {
 type Mutation {
   createProperty(input: CreatePropertyInput!): ID!
   deleteProperty(id: ID!): Boolean!
-  incrementPropertyView(input: PropertyViewInput!): Boolean!
-  updateUser(input: UserInput!): User!
-  assignBounty(input: BountyInput!): Property!
+  incrementPropertyView(input: PropertyViewInput!): Boolean
+  updateUser(input: UserInput!): Boolean!
+  assignBounty(input: BountyInput!): Boolean!
 }
 
 type User {
@@ -20,11 +22,11 @@ type User {
   phone: String
   name: String!
   type: UserType!
-  properties: [Property!]
 }
 
 input UserInput {
   type: UserType
+  name: String
 }
 
 type Property {
@@ -79,15 +81,20 @@ type Cost {
 }
 
 type PropertyPoint {
-  propertyId: String!
+  propertySlug: String!
   propertyTitle: String!
-  points: Int!
+  impressions: Int!
   profit: Float!
 }
 
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
+}
+
+type PropertyPointPage {
+  points: [PropertyPoint!]
+  pageInfo: PageInfo!
 }
 
 type PropertyPage {
@@ -104,6 +111,17 @@ input BountyInput {
 input PropertyViewInput {
   referrerId: ID
   propertyId: ID!
+}
+
+input PropertiesInput {
+  type: CostType!
+  state: String!
+  budget: Float
+  cursor: String
+}
+
+input PaginationInput {
+  cursor: String
 }
 
 input CreatePropertyInput {

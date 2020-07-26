@@ -14,7 +14,8 @@ const propertyResolver: QueryResolvers.PropertyResolver = async (_, args, ctx) =
             ...property.owner,
             phone: property.owner?.phone ?? ''
         },
-        images: property.images ?? []
+        images: property.images ?? [],
+        id: property.dbId
     }
 
 }

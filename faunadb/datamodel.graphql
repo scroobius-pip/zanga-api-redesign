@@ -59,10 +59,13 @@ Unassigned
 type Query {
   # findPropertiesByCostType(costType:CostType!):[Property!]!
   findUserByEmail(email:String!):User
+  findUserByUserId(userId:ID!):User
   findPropertyPointByPropertyIdAndUserId(propertyId:ID!,userId:ID!):PropertyPoint
   findPropertyByFeatured(featured:Boolean!):[Property!]
   findPropertyBySlug(slug:String!):Property
   findPropertiesByCostTypeAndState(costType:CostType!,state:String!):[Property!]
+  findPropertiesByUserId(costType:CostType!,state:String!):[Property!]
+  findPropertyPointsByUserId(userId:ID!):[PropertyPoint!]
 }
 
 type Mutation {

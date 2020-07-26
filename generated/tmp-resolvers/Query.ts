@@ -8,6 +8,12 @@ export const Query: QueryResolvers.Type = {
   me: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
   },
+  postedProperties: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
+  },
+  sharedProperties: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
+  },
   properties: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
   },

@@ -1,0 +1,15 @@
+
+query findUserPropertyPoints($userId:ID!,$cursor:String,$size:Int){
+  findPropertyPointsByUserId(userId:$userId,_size:$size,_cursor:$cursor){
+      after
+      before
+      data{
+          impressions
+        profit
+      property{
+        slug
+        title
+      }
+  }
+  }
+}

@@ -4,5 +4,9 @@
 import { PropertyPointResolvers } from "../graphqlgen";
 
 export const PropertyPoint: PropertyPointResolvers.Type = {
-  ...PropertyPointResolvers.defaultResolvers
+  ...PropertyPointResolvers.defaultResolvers,
+
+  impressions: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
+  }
 };

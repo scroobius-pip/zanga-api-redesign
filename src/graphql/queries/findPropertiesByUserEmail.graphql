@@ -1,0 +1,28 @@
+
+
+query userProperties($email:String!,$cursor:String,$size:Int){
+  findUserByEmail(email:$email){
+    properties(_size:$size,_cursor:$cursor){
+after
+before
+data{
+            visits
+    state
+    expense
+    remainingExpense
+    slug
+    featured
+    description
+    costType
+    costValue
+    bounty
+    images{
+      previewUrl
+      url
+    }
+    title
+     dbId:_id
+}
+    }
+  }
+}

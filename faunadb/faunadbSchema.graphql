@@ -291,15 +291,31 @@ type Query {
   ): Property
   findUserByEmail(email: String!): User
   findPropertyBySlug(slug: String!): Property!
+  findPropertiesByUserId(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+    costType: CostType!
+    state: String!
+  ): PropertyPage!
   findPropertyPointByPropertyIdAndUserId(
     propertyId: ID!
     userId: ID!
   ): PropertyPoint
+  findPropertyPointsByUserId(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+    userId: ID!
+  ): PropertyPointPage!
   # Find a document from the collection of 'User' by its id.
   findUserByID(
     # The 'User' document's ID
     id: ID!
   ): User
+  findUserByUserId(userId: ID!): User
   # Find a document from the collection of 'PropertyPoint' by its id.
   findPropertyPointByID(
     # The 'PropertyPoint' document's ID

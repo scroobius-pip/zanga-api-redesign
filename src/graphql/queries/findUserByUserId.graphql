@@ -1,5 +1,5 @@
-query findUserByEmail($email:String!){
-  findUserByEmail(email:$email){    
+query findUserByUserId($userId:ID!){
+  findUserByUserId(userId:$userId){    
     ...UserFields
     # properties{
     #   data {

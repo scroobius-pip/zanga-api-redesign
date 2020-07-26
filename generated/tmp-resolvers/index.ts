@@ -5,24 +5,26 @@ import { Resolvers } from "../graphqlgen";
 
 import { Query } from "./Query";
 import { User } from "./User";
+import { PropertyPage } from "./PropertyPage";
 import { Property } from "./Property";
 import { Image } from "./Image";
-import { PropertyPage } from "./PropertyPage";
 import { PageInfo } from "./PageInfo";
+import { PropertyPointPage } from "./PropertyPointPage";
+import { PropertyPoint } from "./PropertyPoint";
 import { Mutation } from "./Mutation";
 import { Location } from "./Location";
 import { Cost } from "./Cost";
-import { PropertyPoint } from "./PropertyPoint";
 
 export const resolvers: Resolvers = {
   Query,
   User,
+  PropertyPage,
   Property,
   Image,
-  PropertyPage,
   PageInfo,
+  PropertyPointPage,
+  PropertyPoint,
   Mutation,
   Location,
-  Cost,
-  PropertyPoint
+  Cost
 };

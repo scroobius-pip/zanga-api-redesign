@@ -343,9 +343,12 @@ export type Query = {
   findPropertyByID?: Maybe<Property>,
   findUserByEmail?: Maybe<User>,
   findPropertyBySlug: Property,
+  findPropertiesByUserId: PropertyPage,
   findPropertyPointByPropertyIdAndUserId?: Maybe<PropertyPoint>,
+  findPropertyPointsByUserId: PropertyPointPage,
   /** Find a document from the collection of 'User' by its id. */
   findUserByID?: Maybe<User>,
+  findUserByUserId?: Maybe<User>,
   /** Find a document from the collection of 'PropertyPoint' by its id. */
   findPropertyPointByID?: Maybe<PropertyPoint>,
   findPropertiesByCostType: PropertyPage,
@@ -382,14 +385,34 @@ export type QueryFindPropertyBySlugArgs = {
 };
 
 
+export type QueryFindPropertiesByUserIdArgs = {
+  _size?: Maybe<Scalars['Int']>,
+  _cursor?: Maybe<Scalars['String']>,
+  costType: CostType,
+  state: Scalars['String']
+};
+
+
 export type QueryFindPropertyPointByPropertyIdAndUserIdArgs = {
   propertyId: Scalars['ID'],
   userId: Scalars['ID']
 };
 
 
+export type QueryFindPropertyPointsByUserIdArgs = {
+  _size?: Maybe<Scalars['Int']>,
+  _cursor?: Maybe<Scalars['String']>,
+  userId: Scalars['ID']
+};
+
+
 export type QueryFindUserByIdArgs = {
   id: Scalars['ID']
+};
+
+
+export type QueryFindUserByUserIdArgs = {
+  userId: Scalars['ID']
 };
 
 
@@ -639,6 +662,33 @@ export type PropertiesQuery = (
   ) }
 );
 
+export type UserPropertiesQueryVariables = {
+  email: Scalars['String'],
+  cursor?: Maybe<Scalars['String']>,
+  size?: Maybe<Scalars['Int']>
+};
+
+
+export type UserPropertiesQuery = (
+  { __typename?: 'Query' }
+  & { findUserByEmail: Maybe<(
+    { __typename?: 'User' }
+    & { properties: (
+      { __typename?: 'PropertyPage' }
+      & Pick<PropertyPage, 'after' | 'before'>
+      & { data: Array<Maybe<(
+        { __typename?: 'Property' }
+        & Pick<Property, 'visits' | 'state' | 'expense' | 'remainingExpense' | 'slug' | 'featured' | 'description' | 'costType' | 'costValue' | 'bounty' | 'title'>
+        & { dbId: Property['_id'] }
+        & { images: Maybe<Array<(
+          { __typename?: 'Image' }
+          & Pick<Image, 'previewUrl' | 'url'>
+        )>> }
+      )>> }
+    ) }
+  )> }
+);
+
 export type PropertyQueryVariables = {
   slug: Scalars['String']
 };
@@ -666,6 +716,29 @@ export type FindPropertyPointQuery = (
   )> }
 );
 
+export type FindUserPropertyPointsQueryVariables = {
+  userId: Scalars['ID'],
+  cursor?: Maybe<Scalars['String']>,
+  size?: Maybe<Scalars['Int']>
+};
+
+
+export type FindUserPropertyPointsQuery = (
+  { __typename?: 'Query' }
+  & { findPropertyPointsByUserId: (
+    { __typename?: 'PropertyPointPage' }
+    & Pick<PropertyPointPage, 'after' | 'before'>
+    & { data: Array<Maybe<(
+      { __typename?: 'PropertyPoint' }
+      & Pick<PropertyPoint, 'impressions' | 'profit'>
+      & { property: (
+        { __typename?: 'Property' }
+        & Pick<Property, 'slug' | 'title'>
+      ) }
+    )>> }
+  ) }
+);
+
 export type FindUserByEmailQueryVariables = {
   email: Scalars['String']
 };
@@ -675,13 +748,19 @@ export type FindUserByEmailQuery = (
   { __typename?: 'Query' }
   & { findUserByEmail: Maybe<(
     { __typename?: 'User' }
-    & { properties: (
-      { __typename?: 'PropertyPage' }
-      & { data: Array<Maybe<(
-        { __typename?: 'Property' }
-        & PropertyFieldsFragment
-      )>> }
-    ) }
+    & UserFieldsFragment
+  )> }
+);
+
+export type FindUserByUserIdQueryVariables = {
+  userId: Scalars['ID']
+};
+
+
+export type FindUserByUserIdQuery = (
+  { __typename?: 'Query' }
+  & { findUserByUserId: Maybe<(
+    { __typename?: 'User' }
     & UserFieldsFragment
   )> }
 );
@@ -811,6 +890,34 @@ export const PropertiesDocument = gql`
   }
 }
     ${PropertyFieldsFragmentDoc}`;
+export const UserPropertiesDocument = gql`
+    query userProperties($email: String!, $cursor: String, $size: Int) {
+  findUserByEmail(email: $email) {
+    properties(_size: $size, _cursor: $cursor) {
+      after
+      before
+      data {
+        visits
+        state
+        expense
+        remainingExpense
+        slug
+        featured
+        description
+        costType
+        costValue
+        bounty
+        images {
+          previewUrl
+          url
+        }
+        title
+        dbId: _id
+      }
+    }
+  }
+}
+    `;
 export const PropertyDocument = gql`
     query property($slug: String!) {
   findPropertyBySlug(slug: $slug) {
@@ -825,19 +932,36 @@ export const FindPropertyPointDocument = gql`
   }
 }
     `;
-export const FindUserByEmailDocument = gql`
-    query findUserByEmail($email: String!) {
-  findUserByEmail(email: $email) {
-    ...UserFields
-    properties {
-      data {
-        ...PropertyFields
+export const FindUserPropertyPointsDocument = gql`
+    query findUserPropertyPoints($userId: ID!, $cursor: String, $size: Int) {
+  findPropertyPointsByUserId(userId: $userId, _size: $size, _cursor: $cursor) {
+    after
+    before
+    data {
+      impressions
+      profit
+      property {
+        slug
+        title
       }
     }
   }
 }
-    ${UserFieldsFragmentDoc}
-${PropertyFieldsFragmentDoc}`;
+    `;
+export const FindUserByEmailDocument = gql`
+    query findUserByEmail($email: String!) {
+  findUserByEmail(email: $email) {
+    ...UserFields
+  }
+}
+    ${UserFieldsFragmentDoc}`;
+export const FindUserByUserIdDocument = gql`
+    query findUserByUserId($userId: ID!) {
+  findUserByUserId(userId: $userId) {
+    ...UserFields
+  }
+}
+    ${UserFieldsFragmentDoc}`;
 export function getSdk(client: GraphQLClient) {
   return {
     createProperty(variables: CreatePropertyMutationVariables): Promise<CreatePropertyMutation> {
@@ -870,14 +994,23 @@ export function getSdk(client: GraphQLClient) {
     properties(variables: PropertiesQueryVariables): Promise<PropertiesQuery> {
       return client.request<PropertiesQuery>(print(PropertiesDocument), variables);
     },
+    userProperties(variables: UserPropertiesQueryVariables): Promise<UserPropertiesQuery> {
+      return client.request<UserPropertiesQuery>(print(UserPropertiesDocument), variables);
+    },
     property(variables: PropertyQueryVariables): Promise<PropertyQuery> {
       return client.request<PropertyQuery>(print(PropertyDocument), variables);
     },
     findPropertyPoint(variables: FindPropertyPointQueryVariables): Promise<FindPropertyPointQuery> {
       return client.request<FindPropertyPointQuery>(print(FindPropertyPointDocument), variables);
     },
+    findUserPropertyPoints(variables: FindUserPropertyPointsQueryVariables): Promise<FindUserPropertyPointsQuery> {
+      return client.request<FindUserPropertyPointsQuery>(print(FindUserPropertyPointsDocument), variables);
+    },
     findUserByEmail(variables: FindUserByEmailQueryVariables): Promise<FindUserByEmailQuery> {
       return client.request<FindUserByEmailQuery>(print(FindUserByEmailDocument), variables);
+    },
+    findUserByUserId(variables: FindUserByUserIdQueryVariables): Promise<FindUserByUserIdQuery> {
+      return client.request<FindUserByUserIdQuery>(print(FindUserByUserIdDocument), variables);
     }
   };
 }

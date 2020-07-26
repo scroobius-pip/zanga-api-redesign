@@ -2,6 +2,7 @@ import { QueryResolvers } from '../../../generated/graphqlgen';
 import { AuthenticationError } from 'apollo-server-core';
 import { User } from '../../types/models';
 import { UserType } from '../../../generated/sdk';
+import { mapDbPropertyToProperty } from './mapDbPropertyToProperty';
 
 const meResolver: QueryResolvers.MeResolver = async (_, __, ctx) => {
     if (!ctx.userEmail) {
@@ -21,9 +22,6 @@ const meResolver: QueryResolvers.MeResolver = async (_, __, ctx) => {
         name: user.name,
         phone: user?.phone ?? '',
         type: user.type,
-        sharedProperties: [],
-        postedProperties: []
-        // id:
     }
 }
 

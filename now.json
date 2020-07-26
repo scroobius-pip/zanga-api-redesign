@@ -1,6 +1,6 @@
 {
     "name": "zanga-api",
-    "alias": "zanga-api.now.sh",
+    "alias": "zanga-reapi.now.sh",
     "version": 2,
     "builds": [
         {

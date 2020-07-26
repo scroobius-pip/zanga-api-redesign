@@ -7,14 +7,19 @@ export interface User {
     phone: string
     name: string
     type: UserType,
-    sharedProperties: Maybe<PropertyShare[]>
-    postedProperties: Maybe<Property[]>
+    // sharedProperties: Maybe<PropertyShare[]>
+    // postedProperties: Maybe<Property[]>
 }
 
 export interface PropertyPage {
     properties: Property[]
     pageInfo: PageInfo
 
+}
+
+export interface PropertyPointPage {
+    points: PropertyPoint[]
+    pageInfo: PageInfo
 }
 export interface PageInfo {
     after: Maybe<string>
@@ -23,7 +28,7 @@ export interface PageInfo {
 
 
 export interface Property {
-
+    id: string
     slug: string
     expense: number
     remainingExpense: number
@@ -65,11 +70,11 @@ export interface LoginResult {
 }
 
 
-export interface PropertyShare {
-    property: Property
-    visits: number
-    profit: number
-}
+// export interface PropertyShare {
+//     property: Property
+//     visits: number
+//     profit: number
+// }
 
 export interface Image {
     url: string
@@ -77,9 +82,9 @@ export interface Image {
 }
 
 export interface PropertyPoint {
-    propertyId: string
+    propertySlug: string
     propertyTitle: string
-    points: number
+    visits: number
     profit: number
 }
 
