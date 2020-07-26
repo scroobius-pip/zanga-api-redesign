@@ -24,6 +24,11 @@ type User {
   type: UserType!
 }
 
+type Owner {
+  phone: String!
+  name: String!
+}
+
 input UserInput {
   type: UserType
   name: String
@@ -35,6 +40,7 @@ type Property {
   expense: Float
   remainingExpense: Float
   title: String!
+  city: String
   visits: Int!
   state: String
   costValue: Int!
@@ -68,16 +74,13 @@ enum UserType {
 }
 
 type Location {
+  city: String!
   state: String!
 }
 
 input LocationInput {
+  city: String!
   state: String!
-}
-
-type Cost {
-  value: Int!
-  costType: CostType!
 }
 
 type PropertyPoint {

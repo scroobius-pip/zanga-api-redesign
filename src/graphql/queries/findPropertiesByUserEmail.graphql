@@ -8,6 +8,7 @@ before
 data{
             visits
     state
+    city
     expense
     remainingExpense
     slug

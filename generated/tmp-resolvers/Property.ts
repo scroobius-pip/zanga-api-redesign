@@ -4,12 +4,5 @@
 import { PropertyResolvers } from "../graphqlgen";
 
 export const Property: PropertyResolvers.Type = {
-  ...PropertyResolvers.defaultResolvers,
-
-  costType: (parent, args, ctx) => {
-    throw new Error("Resolver not implemented");
-  },
-  featured: (parent, args, ctx) => {
-    throw new Error("Resolver not implemented");
-  }
+  ...PropertyResolvers.defaultResolvers
 };

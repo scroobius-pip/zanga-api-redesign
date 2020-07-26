@@ -9,8 +9,8 @@ import {
   PageInfo,
   PropertyPointPage,
   PropertyPoint,
-  Location,
-  Cost
+  Owner,
+  Location
 } from "../src/types/models.d";
 import { Context } from "../src/types/types.d";
 
@@ -257,9 +257,8 @@ export namespace UserResolvers {
   export const defaultResolvers = {
     id: (parent: User) => parent.id,
     email: (parent: User) => parent.email,
-    phone: (parent: User) => parent.phone,
-    name: (parent: User) => parent.name,
-    type: (parent: User) => parent.type
+    phone: (parent: User) => (parent.phone === undefined ? null : parent.phone),
+    name: (parent: User) => parent.name
   };
 
   export type IdResolver =
@@ -521,11 +520,14 @@ export namespace PropertyResolvers {
     visits: (parent: Property) => parent.visits,
     bounty: (parent: Property) => parent.bounty,
     title: (parent: Property) => parent.title,
+    city: (parent: Property) => parent.city,
     state: (parent: Property) => parent.state,
+    costType: (parent: Property) => parent.costType,
     costValue: (parent: Property) => parent.costValue,
     owner: (parent: Property) => parent.owner,
     images: (parent: Property) => parent.images,
-    description: (parent: Property) => parent.description
+    description: (parent: Property) => parent.description,
+    featured: (parent: Property) => parent.featured
   };
 
   export type IdResolver =
@@ -611,6 +613,23 @@ export namespace PropertyResolvers {
           ctx: Context,
           info: GraphQLResolveInfo
         ) => string | Promise<string>;
+      };
+
+  export type CityResolver =
+    | ((
+        parent: Property,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | null | Promise<string | null>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: Property,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | null | Promise<string | null>;
       };
 
   export type VisitsResolver =
@@ -850,6 +869,23 @@ export namespace PropertyResolvers {
             ctx: Context,
             info: GraphQLResolveInfo
           ) => string | Promise<string>;
+        };
+
+    city:
+      | ((
+          parent: Property,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | null | Promise<string | null>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: Property,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | null | Promise<string | null>;
         };
 
     visits:
@@ -1239,6 +1275,7 @@ export namespace PropertyPointResolvers {
   export const defaultResolvers = {
     propertySlug: (parent: PropertyPoint) => parent.propertySlug,
     propertyTitle: (parent: PropertyPoint) => parent.propertyTitle,
+    impressions: (parent: PropertyPoint) => parent.impressions,
     profit: (parent: PropertyPoint) => parent.profit
   };
 
@@ -1407,6 +1444,7 @@ export namespace MutationResolvers {
     bounty: number;
   }
   export interface LocationInput {
+    city: string;
     state: string;
   }
   export interface ImageInput {
@@ -1607,10 +1645,105 @@ export namespace MutationResolvers {
   }
 }
 
+export namespace OwnerResolvers {
+  export const defaultResolvers = {
+    phone: (parent: Owner) => parent.phone,
+    name: (parent: Owner) => parent.name
+  };
+
+  export type PhoneResolver =
+    | ((
+        parent: Owner,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: Owner,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>;
+      };
+
+  export type NameResolver =
+    | ((
+        parent: Owner,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: Owner,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>;
+      };
+
+  export interface Type {
+    phone:
+      | ((
+          parent: Owner,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: Owner,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | Promise<string>;
+        };
+
+    name:
+      | ((
+          parent: Owner,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: Owner,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | Promise<string>;
+        };
+  }
+}
+
 export namespace LocationResolvers {
   export const defaultResolvers = {
+    city: (parent: Location) => parent.city,
     state: (parent: Location) => parent.state
   };
+
+  export type CityResolver =
+    | ((
+        parent: Location,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: Location,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>;
+      };
 
   export type StateResolver =
     | ((
@@ -1630,6 +1763,23 @@ export namespace LocationResolvers {
       };
 
   export interface Type {
+    city:
+      | ((
+          parent: Location,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: Location,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | Promise<string>;
+        };
+
     state:
       | ((
           parent: Location,
@@ -1649,82 +1799,6 @@ export namespace LocationResolvers {
   }
 }
 
-export namespace CostResolvers {
-  export const defaultResolvers = {
-    value: (parent: Cost) => parent.value
-  };
-
-  export type ValueResolver =
-    | ((
-        parent: Cost,
-        args: {},
-        ctx: Context,
-        info: GraphQLResolveInfo
-      ) => number | Promise<number>)
-    | {
-        fragment: string;
-        resolve: (
-          parent: Cost,
-          args: {},
-          ctx: Context,
-          info: GraphQLResolveInfo
-        ) => number | Promise<number>;
-      };
-
-  export type CostTypeResolver =
-    | ((
-        parent: Cost,
-        args: {},
-        ctx: Context,
-        info: GraphQLResolveInfo
-      ) => CostType | Promise<CostType>)
-    | {
-        fragment: string;
-        resolve: (
-          parent: Cost,
-          args: {},
-          ctx: Context,
-          info: GraphQLResolveInfo
-        ) => CostType | Promise<CostType>;
-      };
-
-  export interface Type {
-    value:
-      | ((
-          parent: Cost,
-          args: {},
-          ctx: Context,
-          info: GraphQLResolveInfo
-        ) => number | Promise<number>)
-      | {
-          fragment: string;
-          resolve: (
-            parent: Cost,
-            args: {},
-            ctx: Context,
-            info: GraphQLResolveInfo
-          ) => number | Promise<number>;
-        };
-
-    costType:
-      | ((
-          parent: Cost,
-          args: {},
-          ctx: Context,
-          info: GraphQLResolveInfo
-        ) => CostType | Promise<CostType>)
-      | {
-          fragment: string;
-          resolve: (
-            parent: Cost,
-            args: {},
-            ctx: Context,
-            info: GraphQLResolveInfo
-          ) => CostType | Promise<CostType>;
-        };
-  }
-}
-
 export interface Resolvers {
   Query: QueryResolvers.Type;
   User: UserResolvers.Type;
@@ -1735,8 +1809,8 @@ export interface Resolvers {
   PropertyPointPage: PropertyPointPageResolvers.Type;
   PropertyPoint: PropertyPointResolvers.Type;
   Mutation: MutationResolvers.Type;
+  Owner: OwnerResolvers.Type;
   Location: LocationResolvers.Type;
-  Cost: CostResolvers.Type;
 }
 
 // @ts-ignore

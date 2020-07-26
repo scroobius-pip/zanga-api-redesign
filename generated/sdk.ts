@@ -496,7 +496,7 @@ export enum UserType {
 
 export type PropertyFieldsFragment = (
   { __typename?: 'Property' }
-  & Pick<Property, 'visits' | 'state' | 'expense' | 'remainingExpense' | 'slug' | 'featured' | 'description' | 'costType' | 'costValue' | 'bounty' | 'title'>
+  & Pick<Property, 'visits' | 'state' | 'city' | 'expense' | 'remainingExpense' | 'slug' | 'featured' | 'description' | 'costType' | 'costValue' | 'bounty' | 'title'>
   & { dbId: Property['_id'] }
   & { owner: (
     { __typename?: 'User' }
@@ -678,7 +678,7 @@ export type UserPropertiesQuery = (
       & Pick<PropertyPage, 'after' | 'before'>
       & { data: Array<Maybe<(
         { __typename?: 'Property' }
-        & Pick<Property, 'visits' | 'state' | 'expense' | 'remainingExpense' | 'slug' | 'featured' | 'description' | 'costType' | 'costValue' | 'bounty' | 'title'>
+        & Pick<Property, 'visits' | 'state' | 'city' | 'expense' | 'remainingExpense' | 'slug' | 'featured' | 'description' | 'costType' | 'costValue' | 'bounty' | 'title'>
         & { dbId: Property['_id'] }
         & { images: Maybe<Array<(
           { __typename?: 'Image' }
@@ -769,6 +769,7 @@ export const PropertyFieldsFragmentDoc = gql`
     fragment PropertyFields on Property {
   visits
   state
+  city
   expense
   remainingExpense
   slug
@@ -899,6 +900,7 @@ export const UserPropertiesDocument = gql`
       data {
         visits
         state
+        city
         expense
         remainingExpense
         slug

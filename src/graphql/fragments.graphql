@@ -1,6 +1,7 @@
 fragment PropertyFields on Property {
         visits
     state
+    city
     expense
     remainingExpense
     slug

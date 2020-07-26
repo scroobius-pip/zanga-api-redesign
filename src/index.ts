@@ -38,7 +38,7 @@ const getUserFromToken = async (token: string) => {
 
 const server = new ApolloServer({
     playground: true,
-    // introspection: true,
+    introspection: true,
     // mocks: true,
     resolvers: resolvers as any,
     typeDefs: gqlSchema,

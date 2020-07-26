@@ -16,9 +16,12 @@ export const mapDbPropertyToProperty = (datum: sdk.Maybe<{ __typename?: "Propert
         remainingExpense: datum?.remainingExpense ?? 0,
         slug: datum?.slug ?? '',
         state: datum?.state ?? '',
+        city: datum?.state ?? '',
         title: datum?.title ?? '',
         visits: datum?.visits ?? 0,
-        id: datum?.dbId ?? ''
+        id: datum?.dbId ?? '',
+        costType: datum?.costType ?? 'Rent',
+        featured: !!datum?.featured
     }
 
 }

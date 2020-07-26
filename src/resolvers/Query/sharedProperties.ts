@@ -16,7 +16,7 @@ const propertiesResolver: QueryResolvers.SharedPropertiesResolver = async (_, { 
         },
         points: (result ?? [])?.data.map((d) => {
             return {
-                visits: d?.impressions ?? 0,
+                impressions: d?.impressions ?? 0,
                 profit: d?.profit ?? 0,
                 propertySlug: d?.property.slug ?? '',
                 propertyTitle: d?.property.title ?? ''

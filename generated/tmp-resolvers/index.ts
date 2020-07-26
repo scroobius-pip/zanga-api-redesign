@@ -12,8 +12,8 @@ import { PageInfo } from "./PageInfo";
 import { PropertyPointPage } from "./PropertyPointPage";
 import { PropertyPoint } from "./PropertyPoint";
 import { Mutation } from "./Mutation";
+import { Owner } from "./Owner";
 import { Location } from "./Location";
-import { Cost } from "./Cost";
 
 export const resolvers: Resolvers = {
   Query,
@@ -25,6 +25,6 @@ export const resolvers: Resolvers = {
   PropertyPointPage,
   PropertyPoint,
   Mutation,
-  Location,
-  Cost
+  Owner,
+  Location
 };
