@@ -4,12 +4,5 @@
 import { PageInfoResolvers } from "../graphqlgen";
 
 export const PageInfo: PageInfoResolvers.Type = {
-  ...PageInfoResolvers.defaultResolvers,
-
-  hasNextPage: (parent, args, ctx) => {
-    throw new Error("Resolver not implemented");
-  },
-  hasPreviousPage: (parent, args, ctx) => {
-    throw new Error("Resolver not implemented");
-  }
+  ...PageInfoResolvers.defaultResolvers
 };

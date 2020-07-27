@@ -92,8 +92,8 @@ type PropertyPoint {
 }
 
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
+  after: String
+  before: String
 }
 
 type PropertyPointPage {

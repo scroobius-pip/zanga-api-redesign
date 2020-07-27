@@ -1121,15 +1121,20 @@ export namespace ImageResolvers {
 }
 
 export namespace PageInfoResolvers {
-  export const defaultResolvers = {};
+  export const defaultResolvers = {
+    after: (parent: PageInfo) =>
+      parent.after === undefined ? null : parent.after,
+    before: (parent: PageInfo) =>
+      parent.before === undefined ? null : parent.before
+  };
 
-  export type HasNextPageResolver =
+  export type AfterResolver =
     | ((
         parent: PageInfo,
         args: {},
         ctx: Context,
         info: GraphQLResolveInfo
-      ) => boolean | Promise<boolean>)
+      ) => string | null | Promise<string | null>)
     | {
         fragment: string;
         resolve: (
@@ -1137,16 +1142,16 @@ export namespace PageInfoResolvers {
           args: {},
           ctx: Context,
           info: GraphQLResolveInfo
-        ) => boolean | Promise<boolean>;
+        ) => string | null | Promise<string | null>;
       };
 
-  export type HasPreviousPageResolver =
+  export type BeforeResolver =
     | ((
         parent: PageInfo,
         args: {},
         ctx: Context,
         info: GraphQLResolveInfo
-      ) => boolean | Promise<boolean>)
+      ) => string | null | Promise<string | null>)
     | {
         fragment: string;
         resolve: (
@@ -1154,17 +1159,17 @@ export namespace PageInfoResolvers {
           args: {},
           ctx: Context,
           info: GraphQLResolveInfo
-        ) => boolean | Promise<boolean>;
+        ) => string | null | Promise<string | null>;
       };
 
   export interface Type {
-    hasNextPage:
+    after:
       | ((
           parent: PageInfo,
           args: {},
           ctx: Context,
           info: GraphQLResolveInfo
-        ) => boolean | Promise<boolean>)
+        ) => string | null | Promise<string | null>)
       | {
           fragment: string;
           resolve: (
@@ -1172,16 +1177,16 @@ export namespace PageInfoResolvers {
             args: {},
             ctx: Context,
             info: GraphQLResolveInfo
-          ) => boolean | Promise<boolean>;
+          ) => string | null | Promise<string | null>;
         };
 
-    hasPreviousPage:
+    before:
       | ((
           parent: PageInfo,
           args: {},
           ctx: Context,
           info: GraphQLResolveInfo
-        ) => boolean | Promise<boolean>)
+        ) => string | null | Promise<string | null>)
       | {
           fragment: string;
           resolve: (
@@ -1189,7 +1194,7 @@ export namespace PageInfoResolvers {
             args: {},
             ctx: Context,
             info: GraphQLResolveInfo
-          ) => boolean | Promise<boolean>;
+          ) => string | null | Promise<string | null>;
         };
   }
 }

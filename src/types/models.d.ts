@@ -124,6 +124,7 @@ export interface Image {
     url: string
     previewUrl: string
 }
+
 export interface PageInfo {
     after: string | null
     before: string | null
