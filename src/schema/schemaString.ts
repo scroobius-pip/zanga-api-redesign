@@ -32,6 +32,7 @@ type Owner {
 input UserInput {
   type: UserType
   name: String
+  phone: String
 }
 
 type Property {

@@ -2,16 +2,17 @@ import { MutationResolvers } from '../../../generated/graphqlgen';
 import { UserType } from '../../../generated/sdk';
 
 
-const resolver: MutationResolvers.UpdateUserResolver = async (_, { input: { type, name } }, ctx) => {
+const resolver: MutationResolvers.UpdateUserResolver = async (_, { input: { type, name, phone } }, ctx) => {
     if (!ctx.userId) {
         return false
     }
 
-    const modify = { type, name }
+    const modify = { type, name, phone }
 
     await ctx.client.updateUser({
         userId: ctx.userId,
         data: {
+
             ...removeEmpty(modify)
         }
     })

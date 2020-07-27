@@ -1437,6 +1437,7 @@ export namespace MutationResolvers {
   export interface UserInput {
     type?: UserType | null;
     name?: string | null;
+    phone?: string | null;
   }
   export interface BountyInput {
     propertyId: string;
