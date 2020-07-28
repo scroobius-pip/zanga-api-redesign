@@ -258,7 +258,8 @@ export namespace UserResolvers {
     id: (parent: User) => parent.id,
     email: (parent: User) => parent.email,
     phone: (parent: User) => (parent.phone === undefined ? null : parent.phone),
-    name: (parent: User) => parent.name
+    name: (parent: User) => parent.name,
+    balance: (parent: User) => parent.balance
   };
 
   export type IdResolver =
@@ -346,6 +347,23 @@ export namespace UserResolvers {
         ) => UserType | Promise<UserType>;
       };
 
+  export type BalanceResolver =
+    | ((
+        parent: User,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => number | Promise<number>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: User,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => number | Promise<number>;
+      };
+
   export interface Type {
     id:
       | ((
@@ -430,6 +448,23 @@ export namespace UserResolvers {
             ctx: Context,
             info: GraphQLResolveInfo
           ) => UserType | Promise<UserType>;
+        };
+
+    balance:
+      | ((
+          parent: User,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => number | Promise<number>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: User,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => number | Promise<number>;
         };
   }
 }

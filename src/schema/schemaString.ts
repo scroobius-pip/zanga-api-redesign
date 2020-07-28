@@ -22,6 +22,7 @@ type User {
   phone: String
   name: String!
   type: UserType!
+  balance: Float!
 }
 
 type Owner {

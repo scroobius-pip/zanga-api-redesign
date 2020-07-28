@@ -8,7 +8,7 @@ const createProperty: MutationResolvers.CreatePropertyResolver = async (_, { inp
     if (!ctx.userEmail) {
         throw new AuthenticationError('Token Not Passed')
     }
-    const { description, images, location: { state }, title, costType, costValue, featured } = input
+    const { description, images, location: { state, city }, title, costType, costValue, featured } = input
 
 
 
@@ -19,10 +19,10 @@ const createProperty: MutationResolvers.CreatePropertyResolver = async (_, { inp
             costValue,
             description,
             images,
-            // city,
+            city,
             visits: 0,
             bounty: 0,
-            city: '',
+
             remainingExpense: 0,
             slug: generateSlug(title),
             state,

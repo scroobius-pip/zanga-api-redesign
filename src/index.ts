@@ -11,7 +11,9 @@ import findOrCreateUser from './functions/findOrCreateUser';
 
 export const client = getSdk(new GraphQLClient('https://graphql.fauna.com/graphql', {
     headers: {
-        Authorization: 'Bearer ' + process.env.FAUNADB_SECRET
+        Authorization: 'Bearer ' + process.env.FAUNADB_SECRET,
+        "X-Schema-Preview": "partial-update-mutation"
+
     }
 }))
 

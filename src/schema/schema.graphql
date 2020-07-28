@@ -4,6 +4,7 @@ email: String!
 phone: String
 name: String!
 type: UserType!
+balance: Float!
 }
 
 type Owner {

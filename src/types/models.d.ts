@@ -94,6 +94,7 @@ export interface User {
     email: string
     phone: string | null
     name: string
+    balance: number
 }
 export interface PropertyPage {
     properties: Property[]
