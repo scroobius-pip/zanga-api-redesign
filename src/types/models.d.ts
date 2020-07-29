@@ -101,6 +101,15 @@ export interface PropertyPage {
     pageInfo: PageInfo
 
 }
+
+export interface Meta {
+
+}
+export interface Bank {
+    name: string
+    code: string
+}
+
 export interface Property {
     id: string
     slug: string

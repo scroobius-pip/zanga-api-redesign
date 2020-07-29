@@ -6,23 +6,7 @@ query userProperties($email:String!,$cursor:String,$size:Int){
 after
 before
 data{
-            visits
-    state
-    city
-    expense
-    remainingExpense
-    slug
-    featured
-    description
-    costType
-    costValue
-    bounty
-    images{
-      previewUrl
-      url
-    }
-    title
-     dbId:_id
+...PropertyFields
 }
     }
   }

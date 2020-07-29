@@ -1,6 +1,6 @@
 import { QueryResolvers } from '../../../generated/graphqlgen';
 import { CostType } from '../../../generated/sdk';
-import { mapDbPropertyToProperty } from './mapDbPropertyToProperty';
+import mapDbPropertyToProperty from './mapDbPropertyToProperty';
 
 const propertiesResolver: QueryResolvers.PropertiesResolver = async (_, { input }, ctx) => {
     const { cursor, state, type, budget } = input

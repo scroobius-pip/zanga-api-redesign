@@ -9,6 +9,8 @@ import {
   PageInfo,
   PropertyPointPage,
   PropertyPoint,
+  Meta,
+  Bank,
   Owner,
   Location
 } from "../src/types/models.d";
@@ -29,6 +31,9 @@ export namespace QueryResolvers {
     budget?: number | null;
     cursor?: string | null;
   }
+  export interface PaymentInput {
+    amount: number;
+  }
 
   export interface ArgsPostedProperties {
     input?: PaginationInput | null;
@@ -44,6 +49,10 @@ export namespace QueryResolvers {
 
   export interface ArgsProperty {
     slug: string;
+  }
+
+  export interface ArgsGetPaymentLink {
+    input: PaymentInput;
   }
 
   export type MeResolver =
@@ -148,6 +157,40 @@ export namespace QueryResolvers {
         ) => PropertyPage | Promise<PropertyPage>;
       };
 
+  export type GetPaymentLinkResolver =
+    | ((
+        parent: undefined,
+        args: ArgsGetPaymentLink,
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: undefined,
+          args: ArgsGetPaymentLink,
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>;
+      };
+
+  export type MetaResolver =
+    | ((
+        parent: undefined,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => Meta | Promise<Meta>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: undefined,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => Meta | Promise<Meta>;
+      };
+
   export interface Type {
     me:
       | ((
@@ -249,6 +292,40 @@ export namespace QueryResolvers {
             ctx: Context,
             info: GraphQLResolveInfo
           ) => PropertyPage | Promise<PropertyPage>;
+        };
+
+    getPaymentLink:
+      | ((
+          parent: undefined,
+          args: ArgsGetPaymentLink,
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: undefined,
+            args: ArgsGetPaymentLink,
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | Promise<string>;
+        };
+
+    meta:
+      | ((
+          parent: undefined,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => Meta | Promise<Meta>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: undefined,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => Meta | Promise<Meta>;
         };
   }
 }
@@ -1458,6 +1535,123 @@ export namespace PropertyPointResolvers {
   }
 }
 
+export namespace MetaResolvers {
+  export const defaultResolvers = {};
+
+  export type BanksResolver =
+    | ((
+        parent: Meta,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => Bank[] | null | Promise<Bank[] | null>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: Meta,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => Bank[] | null | Promise<Bank[] | null>;
+      };
+
+  export interface Type {
+    banks:
+      | ((
+          parent: Meta,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => Bank[] | null | Promise<Bank[] | null>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: Meta,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => Bank[] | null | Promise<Bank[] | null>;
+        };
+  }
+}
+
+export namespace BankResolvers {
+  export const defaultResolvers = {
+    name: (parent: Bank) => parent.name,
+    code: (parent: Bank) => parent.code
+  };
+
+  export type NameResolver =
+    | ((
+        parent: Bank,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: Bank,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>;
+      };
+
+  export type CodeResolver =
+    | ((
+        parent: Bank,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: Bank,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>;
+      };
+
+  export interface Type {
+    name:
+      | ((
+          parent: Bank,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: Bank,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | Promise<string>;
+        };
+
+    code:
+      | ((
+          parent: Bank,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: Bank,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | Promise<string>;
+        };
+  }
+}
+
 export namespace MutationResolvers {
   export const defaultResolvers = {};
 
@@ -1849,6 +2043,8 @@ export interface Resolvers {
   PageInfo: PageInfoResolvers.Type;
   PropertyPointPage: PropertyPointPageResolvers.Type;
   PropertyPoint: PropertyPointResolvers.Type;
+  Meta: MetaResolvers.Type;
+  Bank: BankResolvers.Type;
   Mutation: MutationResolvers.Type;
   Owner: OwnerResolvers.Type;
   Location: LocationResolvers.Type;

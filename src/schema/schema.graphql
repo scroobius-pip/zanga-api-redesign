@@ -119,6 +119,20 @@ input PaginationInput {
   cursor:String
 }
 
+input PaymentInput {
+  amount:Float!
+}
+
+type Bank {
+  name:String!
+  code:String!
+}
+
+
+type Meta {
+  banks: [Bank!]
+}
+
 type Query {
     me:User
     postedProperties(input:PaginationInput):PropertyPage!
@@ -126,6 +140,8 @@ type Query {
     properties(input:PropertiesInput!):PropertyPage!
     property(slug:String!):Property
     featuredProperties:PropertyPage!
+    getPaymentLink(input:PaymentInput!):String!
+    meta:Meta!
 }
 
 type Mutation {

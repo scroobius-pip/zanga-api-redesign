@@ -2,7 +2,7 @@ import { MutationResolvers } from '../../../generated/graphqlgen';
 
 
 const resolver: MutationResolvers.AssignBountyResolver = async (_, { input: { bounty, expense, propertyId } }, ctx) => {
-    if (ctx.userId) {
+    if (!ctx.userId) {
         return false
     }
     await ctx.client.updateProperty({

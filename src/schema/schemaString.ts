@@ -6,6 +6,7 @@ const data = `type Query {
   properties(input: PropertiesInput!): PropertyPage!
   property(slug: String!): Property
   featuredProperties: PropertyPage!
+  getPaymentLink(input: PaymentInput!): String!
 }
 
 type Mutation {
@@ -127,6 +128,10 @@ input PropertiesInput {
 
 input PaginationInput {
   cursor: String
+}
+
+input PaymentInput {
+  amount: Float!
 }
 
 input CreatePropertyInput {

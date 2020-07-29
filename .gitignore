@@ -1,4 +1,4 @@
 .now
 node_modules
 dist
-.now
+now.json

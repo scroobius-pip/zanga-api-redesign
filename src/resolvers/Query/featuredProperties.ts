@@ -1,5 +1,5 @@
 import { QueryResolvers } from '../../../generated/graphqlgen';
-import { mapDbPropertyToProperty } from './mapDbPropertyToProperty';
+import mapDbPropertyToProperty from './mapDbPropertyToProperty';
 
 const featuredPropertiesResolver: QueryResolvers.FeaturedPropertiesResolver = async (_, args, ctx) => {
     return {

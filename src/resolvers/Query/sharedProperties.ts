@@ -1,5 +1,5 @@
 import { QueryResolvers } from '../../../generated/graphqlgen';
-import { mapDbPropertyToProperty } from './mapDbPropertyToProperty';
+import mapDbPropertyToProperty from './mapDbPropertyToProperty';
 import { AuthenticationError } from 'apollo-server-core';
 
 const propertiesResolver: QueryResolvers.SharedPropertiesResolver = async (_, { input }, ctx) => {

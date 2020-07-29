@@ -5,6 +5,7 @@ import propertyResolver from './property';
 import featuredPropertiesResolver from './featuredProperties';
 import postedPropertiesResolver from './postedProperties'
 import sharedPropertiesResolver from './sharedProperties'
+import getPaymentLinkResolver from './getPaymentLink'
 
 const Query: QueryResolvers.Type = {
     me: meResolver,
@@ -12,8 +13,8 @@ const Query: QueryResolvers.Type = {
     property: propertyResolver,
     featuredProperties: featuredPropertiesResolver,
     postedProperties: postedPropertiesResolver,
-    sharedProperties: sharedPropertiesResolver
-
+    sharedProperties: sharedPropertiesResolver,
+    getPaymentLink: getPaymentLinkResolver
 }
 
 export default Query

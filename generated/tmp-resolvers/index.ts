@@ -11,6 +11,8 @@ import { Image } from "./Image";
 import { PageInfo } from "./PageInfo";
 import { PropertyPointPage } from "./PropertyPointPage";
 import { PropertyPoint } from "./PropertyPoint";
+import { Meta } from "./Meta";
+import { Bank } from "./Bank";
 import { Mutation } from "./Mutation";
 import { Owner } from "./Owner";
 import { Location } from "./Location";
@@ -24,6 +26,8 @@ export const resolvers: Resolvers = {
   PageInfo,
   PropertyPointPage,
   PropertyPoint,
+  Meta,
+  Bank,
   Mutation,
   Owner,
   Location

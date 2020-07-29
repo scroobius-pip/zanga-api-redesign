@@ -1,8 +1,8 @@
 import { Property } from '../../types/models';
 import * as sdk from '../../../generated/sdk';
 
-export const mapDbPropertyToProperty = (datum: sdk.Maybe<{ __typename?: "Property" | undefined; } & { __typename?: "Property" | undefined; } & Pick<sdk.Property, "state" | "city" | "visits" | "expense" | "remainingExpense" | "slug" | "featured" | "description" | "costType" | "costValue" | "bounty" | "title"> & { dbId: string; } & { owner?: { __typename?: "User" | undefined; } & Pick<sdk.User, "name" | "phone">; images: sdk.Maybe<({ __typename?: "Image" | undefined; } & Pick<sdk.Image, "previewUrl" | "url">)[]>; }>): Property => {
 
+export default function mapDbPropertyToProperty(datum: sdk.Maybe<{ __typename?: "Property" | undefined; } & { __typename?: "Property" | undefined; } & Pick<sdk.Property, "visits" | "state" | "city" | "expense" | "remainingExpense" | "slug" | "featured" | "description" | "costType" | "costValue" | "bounty" | "title"> & { dbId: string; } & { owner: { __typename?: "User" | undefined; } & Pick<sdk.User, "name" | "phone">; images?: ({ __typename?: "Image" | undefined; } & Pick<sdk.Image, "previewUrl" | "url">)[] | null | undefined; }>): { bounty: number; costValue: number; description: string; expense: number; images: ({ __typename?: "Image" | undefined; } & Pick<sdk.Image, "previewUrl" | "url">)[]; owner: { name: string; phone: string; }; remainingExpense: number; slug: string; state: string; city: string; title: string; visits: number; id: string; costType: sdk.CostType.Sale | "Rent"; featured: boolean; } {
     return {
         bounty: datum?.bounty ?? 0,
         costValue: datum?.costValue ?? 0,
@@ -22,6 +22,5 @@ export const mapDbPropertyToProperty = (datum: sdk.Maybe<{ __typename?: "Propert
         id: datum?.dbId ?? '',
         costType: datum?.costType ?? 'Rent',
         featured: !!datum?.featured
-    }
-
+    };
 }

@@ -22,5 +22,11 @@ export const Query: QueryResolvers.Type = {
   },
   featuredProperties: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
+  },
+  getPaymentLink: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
+  },
+  meta: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
   }
 };
