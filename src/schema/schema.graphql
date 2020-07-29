@@ -123,6 +123,7 @@ input PaymentInput {
   amount:Float!
 }
 
+
 type Bank {
   name:String!
   code:String!
@@ -141,6 +142,7 @@ type Query {
     property(slug:String!):Property
     featuredProperties:PropertyPage!
     getPaymentLink(input:PaymentInput!):String!
+    getBankAccountName(accountNo:String!,bankCode:String!):String
     meta:Meta!
 }
 

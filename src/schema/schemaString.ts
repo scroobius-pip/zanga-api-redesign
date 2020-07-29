@@ -7,6 +7,7 @@ const data = `type Query {
   property(slug: String!): Property
   featuredProperties: PropertyPage!
   getPaymentLink(input: PaymentInput!): String!
+  getBankAccountName(accountNo: String!, bankCode: String!): String
   meta: Meta!
 }
 

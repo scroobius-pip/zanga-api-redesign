@@ -55,6 +55,11 @@ export namespace QueryResolvers {
     input: PaymentInput;
   }
 
+  export interface ArgsGetBankAccountName {
+    accountNo: string;
+    bankCode: string;
+  }
+
   export type MeResolver =
     | ((
         parent: undefined,
@@ -172,6 +177,23 @@ export namespace QueryResolvers {
           ctx: Context,
           info: GraphQLResolveInfo
         ) => string | Promise<string>;
+      };
+
+  export type GetBankAccountNameResolver =
+    | ((
+        parent: undefined,
+        args: ArgsGetBankAccountName,
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | null | Promise<string | null>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: undefined,
+          args: ArgsGetBankAccountName,
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | null | Promise<string | null>;
       };
 
   export type MetaResolver =
@@ -309,6 +331,23 @@ export namespace QueryResolvers {
             ctx: Context,
             info: GraphQLResolveInfo
           ) => string | Promise<string>;
+        };
+
+    getBankAccountName:
+      | ((
+          parent: undefined,
+          args: ArgsGetBankAccountName,
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | null | Promise<string | null>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: undefined,
+            args: ArgsGetBankAccountName,
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | null | Promise<string | null>;
         };
 
     meta:

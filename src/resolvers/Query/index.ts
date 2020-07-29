@@ -7,6 +7,7 @@ import postedPropertiesResolver from './postedProperties'
 import sharedPropertiesResolver from './sharedProperties'
 import getPaymentLinkResolver from './getPaymentLink'
 import metaResolver from './meta'
+import getBankAccountNameResolver from './getBankAccountName'
 
 const Query: QueryResolvers.Type = {
     me: meResolver,
@@ -16,7 +17,8 @@ const Query: QueryResolvers.Type = {
     postedProperties: postedPropertiesResolver,
     sharedProperties: sharedPropertiesResolver,
     getPaymentLink: getPaymentLinkResolver,
-    meta: metaResolver
+    meta: metaResolver,
+    getBankAccountName: getBankAccountNameResolver
 }
 
 export default Query

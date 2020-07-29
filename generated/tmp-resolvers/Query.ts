@@ -26,6 +26,9 @@ export const Query: QueryResolvers.Type = {
   getPaymentLink: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
   },
+  getBankAccountName: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
+  },
   meta: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
   }
