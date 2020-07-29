@@ -2,7 +2,7 @@ import { QueryResolvers, MetaResolvers } from '../../../generated/graphqlgen';
 import axios from 'axios'
 
 
-export const Meta: MetaResolvers.Type = {
+const Meta: MetaResolvers.Type = {
     banks: async (parent, args, ctx) => {
         const result = await axios.get<FlutterwaveBanksResponse>('https://api.flutterwave.com/v3/banks/NG', {
             headers: {
@@ -28,4 +28,4 @@ interface Datum {
 }
 
 
-export default metaResolver
+export default Meta
