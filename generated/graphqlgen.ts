@@ -1536,7 +1536,9 @@ export namespace PropertyPointResolvers {
 }
 
 export namespace MetaResolvers {
-  export const defaultResolvers = {};
+  export const defaultResolvers = {
+    banks: (parent: Meta) => parent.banks
+  };
 
   export type BanksResolver =
     | ((

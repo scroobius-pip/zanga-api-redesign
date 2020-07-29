@@ -103,7 +103,7 @@ export interface PropertyPage {
 }
 
 export interface Meta {
-
+    banks: Bank[]
 }
 export interface Bank {
     name: string

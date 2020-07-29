@@ -4,9 +4,5 @@
 import { MetaResolvers } from "../graphqlgen";
 
 export const Meta: MetaResolvers.Type = {
-  ...MetaResolvers.defaultResolvers,
-
-  banks: (parent, args, ctx) => {
-    throw new Error("Resolver not implemented");
-  }
+  ...MetaResolvers.defaultResolvers
 };
