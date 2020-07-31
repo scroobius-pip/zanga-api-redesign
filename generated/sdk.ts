@@ -527,6 +527,17 @@ export type IncrementPropertyVisitMutation = (
   ) }
 );
 
+export type SubtractUserBalanceMutationVariables = Exact<{
+  userId: Scalars['ID'];
+  value: Scalars['Float'];
+}>;
+
+
+export type SubtractUserBalanceMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'subtractUserBalance'>
+);
+
 export type UpdatePropertyMutationVariables = Exact<{
   propertyId: Scalars['ID'];
   data: PartialUpdatePropertyInput;
@@ -779,6 +790,11 @@ export const IncrementPropertyVisitDocument = gql`
   }
 }
     `;
+export const SubtractUserBalanceDocument = gql`
+    mutation subtractUserBalance($userId: ID!, $value: Float!) {
+  subtractUserBalance(userId: $userId, value: $value)
+}
+    `;
 export const UpdatePropertyDocument = gql`
     mutation updateProperty($propertyId: ID!, $data: PartialUpdatePropertyInput!) {
   partialUpdateProperty(id: $propertyId, data: $data) {
@@ -894,6 +910,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     incrementPropertyVisit(variables: IncrementPropertyVisitMutationVariables): Promise<IncrementPropertyVisitMutation> {
       return withWrapper(() => client.request<IncrementPropertyVisitMutation>(print(IncrementPropertyVisitDocument), variables));
+    },
+    subtractUserBalance(variables: SubtractUserBalanceMutationVariables): Promise<SubtractUserBalanceMutation> {
+      return withWrapper(() => client.request<SubtractUserBalanceMutation>(print(SubtractUserBalanceDocument), variables));
     },
     updateProperty(variables: UpdatePropertyMutationVariables): Promise<UpdatePropertyMutation> {
       return withWrapper(() => client.request<UpdatePropertyMutation>(print(UpdatePropertyDocument), variables));

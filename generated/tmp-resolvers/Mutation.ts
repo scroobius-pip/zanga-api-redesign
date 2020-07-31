@@ -19,5 +19,8 @@ export const Mutation: MutationResolvers.Type = {
   },
   assignBounty: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
+  },
+  withdrawBalance: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
   }
 };

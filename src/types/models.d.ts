@@ -110,6 +110,14 @@ export interface Bank {
     code: string
 }
 
+export interface WithdrawBalanceResult {
+    success: boolean
+    message: string
+    amount: number
+    referenceId: string
+}
+
+
 export interface Property {
     id: string
     slug: string

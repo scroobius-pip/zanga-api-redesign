@@ -17,6 +17,7 @@ type Mutation {
   incrementPropertyView(input: PropertyViewInput!): Boolean
   updateUser(input: UserInput!): Boolean!
   assignBounty(input: BountyInput!): Boolean!
+  withdrawBalance(input: WithdrawBalanceInput!): WithdrawBalanceResult!
 }
 
 type User {
@@ -134,6 +135,21 @@ input PaginationInput {
 
 input PaymentInput {
   amount: Float!
+}
+
+input WithdrawBalanceInput {
+  amount: Float!
+  actualAmount: Float!
+  accountNo: String!
+  bankCode: String!
+  customerName: String!
+}
+
+type WithdrawBalanceResult {
+  success: Boolean!
+  message: String!
+  amount: Float!
+  referenceId: String!
 }
 
 type Bank {

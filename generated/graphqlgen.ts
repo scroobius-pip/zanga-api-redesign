@@ -11,6 +11,7 @@ import {
   PropertyPoint,
   Meta,
   Bank,
+  WithdrawBalanceResult,
   Owner,
   Location
 } from "../src/types/models.d";
@@ -1719,6 +1720,13 @@ export namespace MutationResolvers {
     expense: number;
     bounty: number;
   }
+  export interface WithdrawBalanceInput {
+    amount: number;
+    actualAmount: number;
+    accountNo: string;
+    bankCode: string;
+    customerName: string;
+  }
   export interface LocationInput {
     city: string;
     state: string;
@@ -1746,6 +1754,10 @@ export namespace MutationResolvers {
 
   export interface ArgsAssignBounty {
     input: BountyInput;
+  }
+
+  export interface ArgsWithdrawBalance {
+    input: WithdrawBalanceInput;
   }
 
   export type CreatePropertyResolver =
@@ -1833,6 +1845,23 @@ export namespace MutationResolvers {
         ) => boolean | Promise<boolean>;
       };
 
+  export type WithdrawBalanceResolver =
+    | ((
+        parent: undefined,
+        args: ArgsWithdrawBalance,
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => WithdrawBalanceResult | Promise<WithdrawBalanceResult>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: undefined,
+          args: ArgsWithdrawBalance,
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => WithdrawBalanceResult | Promise<WithdrawBalanceResult>;
+      };
+
   export interface Type {
     createProperty:
       | ((
@@ -1917,6 +1946,170 @@ export namespace MutationResolvers {
             ctx: Context,
             info: GraphQLResolveInfo
           ) => boolean | Promise<boolean>;
+        };
+
+    withdrawBalance:
+      | ((
+          parent: undefined,
+          args: ArgsWithdrawBalance,
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => WithdrawBalanceResult | Promise<WithdrawBalanceResult>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: undefined,
+            args: ArgsWithdrawBalance,
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => WithdrawBalanceResult | Promise<WithdrawBalanceResult>;
+        };
+  }
+}
+
+export namespace WithdrawBalanceResultResolvers {
+  export const defaultResolvers = {
+    success: (parent: WithdrawBalanceResult) => parent.success,
+    message: (parent: WithdrawBalanceResult) => parent.message,
+    amount: (parent: WithdrawBalanceResult) => parent.amount,
+    referenceId: (parent: WithdrawBalanceResult) => parent.referenceId
+  };
+
+  export type SuccessResolver =
+    | ((
+        parent: WithdrawBalanceResult,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => boolean | Promise<boolean>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: WithdrawBalanceResult,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => boolean | Promise<boolean>;
+      };
+
+  export type MessageResolver =
+    | ((
+        parent: WithdrawBalanceResult,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: WithdrawBalanceResult,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>;
+      };
+
+  export type AmountResolver =
+    | ((
+        parent: WithdrawBalanceResult,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => number | Promise<number>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: WithdrawBalanceResult,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => number | Promise<number>;
+      };
+
+  export type ReferenceIdResolver =
+    | ((
+        parent: WithdrawBalanceResult,
+        args: {},
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: WithdrawBalanceResult,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>;
+      };
+
+  export interface Type {
+    success:
+      | ((
+          parent: WithdrawBalanceResult,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => boolean | Promise<boolean>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: WithdrawBalanceResult,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => boolean | Promise<boolean>;
+        };
+
+    message:
+      | ((
+          parent: WithdrawBalanceResult,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: WithdrawBalanceResult,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | Promise<string>;
+        };
+
+    amount:
+      | ((
+          parent: WithdrawBalanceResult,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => number | Promise<number>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: WithdrawBalanceResult,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => number | Promise<number>;
+        };
+
+    referenceId:
+      | ((
+          parent: WithdrawBalanceResult,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: WithdrawBalanceResult,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => string | Promise<string>;
         };
   }
 }
@@ -2087,6 +2280,7 @@ export interface Resolvers {
   Meta: MetaResolvers.Type;
   Bank: BankResolvers.Type;
   Mutation: MutationResolvers.Type;
+  WithdrawBalanceResult: WithdrawBalanceResultResolvers.Type;
   Owner: OwnerResolvers.Type;
   Location: LocationResolvers.Type;
 }

@@ -123,6 +123,20 @@ input PaymentInput {
   amount:Float!
 }
 
+input WithdrawBalanceInput {
+  amount:Float! #the amount to be transfered to the customer
+  actualAmount:Float! #The actual amount that should be deducted from the customers account
+  accountNo:String!
+  bankCode:String!
+  customerName:String!
+}
+
+type WithdrawBalanceResult {
+  success:Boolean!
+  message:String!
+  amount:Float!
+  referenceId:String!
+}
 
 type Bank {
   name:String!
@@ -152,6 +166,7 @@ type Mutation {
     incrementPropertyView(input:PropertyViewInput!):Boolean
     updateUser(input:UserInput!):Boolean!
     assignBounty(input:BountyInput!):Boolean!
+    withdrawBalance(input:WithdrawBalanceInput!):WithdrawBalanceResult!
 }
 
 

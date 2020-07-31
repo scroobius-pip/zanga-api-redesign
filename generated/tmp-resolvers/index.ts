@@ -14,6 +14,7 @@ import { PropertyPoint } from "./PropertyPoint";
 import { Meta } from "./Meta";
 import { Bank } from "./Bank";
 import { Mutation } from "./Mutation";
+import { WithdrawBalanceResult } from "./WithdrawBalanceResult";
 import { Owner } from "./Owner";
 import { Location } from "./Location";
 
@@ -29,6 +30,7 @@ export const resolvers: Resolvers = {
   Meta,
   Bank,
   Mutation,
+  WithdrawBalanceResult,
   Owner,
   Location
 };

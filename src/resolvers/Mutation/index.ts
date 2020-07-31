@@ -4,6 +4,7 @@ import deleteProperty from './deleteProperty'
 import incrementPropertyView from './incrementPropertyView'
 import updateUser from './updateUser'
 import assignBounty from './assignBounty'
+import withdrawBalance from './withdrawBalance'
 
 const Mutation: MutationResolvers.Type = {
     incrementPropertyView,
@@ -11,6 +12,7 @@ const Mutation: MutationResolvers.Type = {
     deleteProperty,
     updateUser,
     assignBounty,
+    withdrawBalance
 
 
 }
