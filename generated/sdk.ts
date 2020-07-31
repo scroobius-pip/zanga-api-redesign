@@ -153,10 +153,10 @@ export type PartialUpdateImageInput = {
 };
 
 export type PartialUpdatePropertyInput = {
-  bounty?: Maybe<Scalars['Float']>;
-  remainingExpense?: Maybe<Scalars['Float']>;
+  bounty?: Maybe<Scalars['String']>;
+  remainingExpense?: Maybe<Scalars['String']>;
   visits?: Maybe<Scalars['Int']>;
-  expense?: Maybe<Scalars['Float']>;
+  expense?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   city?: Maybe<Scalars['String']>;
   state?: Maybe<Scalars['String']>;
@@ -175,12 +175,12 @@ export type PartialUpdatePropertyPointInput = {
   userId?: Maybe<Scalars['ID']>;
   propertyId?: Maybe<Scalars['ID']>;
   impressions?: Maybe<Scalars['Int']>;
-  profit?: Maybe<Scalars['Float']>;
+  profit?: Maybe<Scalars['String']>;
 };
 
 export type PartialUpdateUserInput = {
   phone?: Maybe<Scalars['String']>;
-  balance?: Maybe<Scalars['Float']>;
+  balance?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   properties?: Maybe<UserPropertiesRelation>;
@@ -193,16 +193,16 @@ export type Property = {
   __typename?: 'Property';
   visits: Scalars['Int'];
   city: Scalars['String'];
-  expense?: Maybe<Scalars['Float']>;
+  expense?: Maybe<Scalars['String']>;
   state: Scalars['String'];
-  remainingExpense: Scalars['Float'];
+  remainingExpense: Scalars['String'];
   description: Scalars['String'];
   costType: CostType;
   _id: Scalars['ID'];
   featured?: Maybe<Scalars['Boolean']>;
   slug: Scalars['String'];
   costValue: Scalars['Int'];
-  bounty: Scalars['Float'];
+  bounty: Scalars['String'];
   owner: User;
   title: Scalars['String'];
   images?: Maybe<Array<Image>>;
@@ -210,10 +210,10 @@ export type Property = {
 };
 
 export type PropertyInput = {
-  bounty: Scalars['Float'];
-  remainingExpense: Scalars['Float'];
+  bounty: Scalars['String'];
+  remainingExpense: Scalars['String'];
   visits: Scalars['Int'];
-  expense?: Maybe<Scalars['Float']>;
+  expense?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   city: Scalars['String'];
   state: Scalars['String'];
@@ -241,7 +241,7 @@ export type PropertyPage = {
 export type PropertyPoint = {
   __typename?: 'PropertyPoint';
   impressions: Scalars['Int'];
-  profit: Scalars['Float'];
+  profit: Scalars['String'];
   _id: Scalars['ID'];
   propertyId: Scalars['ID'];
   property: Property;
@@ -256,7 +256,7 @@ export type PropertyPointInput = {
   userId: Scalars['ID'];
   propertyId: Scalars['ID'];
   impressions: Scalars['Int'];
-  profit: Scalars['Float'];
+  profit: Scalars['String'];
 };
 
 export type PropertyPointPage = {
@@ -371,7 +371,7 @@ export type User = {
   name: Scalars['String'];
   email: Scalars['String'];
   _id: Scalars['ID'];
-  balance: Scalars['Float'];
+  balance: Scalars['String'];
   properties: PropertyPage;
   userId: Scalars['ID'];
   type: UserType;
@@ -394,7 +394,7 @@ export type UserPropertyPointsArgs = {
 
 export type UserInput = {
   phone?: Maybe<Scalars['String']>;
-  balance: Scalars['Float'];
+  balance: Scalars['String'];
   email: Scalars['String'];
   name: Scalars['String'];
   properties?: Maybe<UserPropertiesRelation>;

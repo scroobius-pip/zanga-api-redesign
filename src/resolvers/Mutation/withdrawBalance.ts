@@ -14,7 +14,10 @@ const resolver: MutationResolvers.WithdrawBalanceResolver = async (_, { input: {
         throw new Error('Balance < Amount')
     }
 
-    const newAmount = (await ctx.client.subtractUserBalance({ userId: ctx.userId, value: Math.abs(actualAmount) })).subtractUserBalance
+    const newAmount = (await ctx.client.subtractUserBalance({
+        userId: ctx.userId,
+        value: Math.abs(actualAmount)
+    })).subtractUserBalance
     // if (!newAmount) {
     //     throw new Error('Could not subtract amount in database')
     // }

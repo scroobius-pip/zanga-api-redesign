@@ -8,8 +8,8 @@ const resolver: MutationResolvers.AssignBountyResolver = async (_, { input: { bo
     await ctx.client.updateProperty({
         propertyId,
         data: {
-            bounty: Math.abs(bounty),
-            remainingExpense: Math.abs(expense)
+            bounty: Math.abs(bounty).toString(),
+            remainingExpense: Math.abs(expense).toString()
         }
     })
     return true

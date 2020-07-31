@@ -14,16 +14,16 @@ const createProperty: MutationResolvers.CreatePropertyResolver = async (_, { inp
 
     const result = await ctx.client.createProperty({
         property: {
-            expense: 0,
+            expense: "0",
             costType: CostType[costType],
             costValue,
             description,
             images,
             city,
             visits: 0,
-            bounty: 0,
+            bounty: "0",
 
-            remainingExpense: 0,
+            remainingExpense: "0",
             slug: generateSlug(title),
             state,
             featured,

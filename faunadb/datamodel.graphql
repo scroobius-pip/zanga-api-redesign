@@ -1,7 +1,7 @@
 
 type User {
 phone:String
-balance:Float!
+balance:String!
 email: String! @unique
 name: String! 
 properties: [Property!] @relation
@@ -21,10 +21,10 @@ propertyPoints: [PropertyPoint!] @relation
 # }
 
 type Property {  
-  bounty: Float!
-  remainingExpense:Float!
+  bounty: String! #actually float
+  remainingExpense:String! #actually float
   visits: Int!
-  expense:Float #stores expense property has costed, shown to the agents
+  expense:String #stores expense property has costed, shown to the agents #actually float
   title: String!
   city: String!
   state: String!
@@ -82,7 +82,7 @@ type PropertyPoint {
   userId:ID!
   propertyId:ID!
   impressions: Int!
-  profit:Float!
+  profit:String!
 }
 
 

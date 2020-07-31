@@ -22,7 +22,7 @@ const meResolver: QueryResolvers.MeResolver = async (_, __, ctx) => {
         name: user.name,
         phone: user?.phone ?? '',
         type: user.type,
-        balance: user.balance
+        balance: parseFloat(user.balance)
     }
 }
 

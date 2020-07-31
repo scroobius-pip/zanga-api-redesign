@@ -8,7 +8,7 @@ const findOrCreateUser = async (email: string, name: string): Promise<{ email: s
         if (!findUserByEmail) {
             const { createUser: { email: newEmail, dbId } } = await client.createUser({
                 user: {
-                    balance: 0,
+                    balance: "0",
                     email,
                     name,
                     type: UserType.Unassigned,

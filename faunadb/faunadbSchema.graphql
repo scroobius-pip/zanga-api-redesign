@@ -123,10 +123,10 @@ input PartialUpdateImageInput {
 
 # 'Property' input values
 input PartialUpdatePropertyInput {
-  bounty: Float
-  remainingExpense: Float
+  bounty: String
+  remainingExpense: String
   visits: Int
-  expense: Float
+  expense: String
   title: String
   city: String
   state: String
@@ -146,13 +146,13 @@ input PartialUpdatePropertyPointInput {
   userId: ID
   propertyId: ID
   impressions: Int
-  profit: Float
+  profit: String
 }
 
 # 'User' input values
 input PartialUpdateUserInput {
   phone: String
-  balance: Float
+  balance: String
   email: String
   name: String
   properties: UserPropertiesRelation
@@ -164,9 +164,9 @@ input PartialUpdateUserInput {
 type Property {
   visits: Int!
   city: String!
-  expense: Float
+  expense: String
   state: String!
-  remainingExpense: Float!
+  remainingExpense: String!
   description: String!
   costType: CostType!
   # The document's ID.
@@ -174,7 +174,7 @@ type Property {
   featured: Boolean
   slug: String!
   costValue: Int!
-  bounty: Float!
+  bounty: String!
   owner: User!
   title: String!
   images: [Image!]
@@ -184,10 +184,10 @@ type Property {
 
 # 'Property' input values
 input PropertyInput {
-  bounty: Float!
-  remainingExpense: Float!
+  bounty: String!
+  remainingExpense: String!
   visits: Int!
-  expense: Float
+  expense: String
   title: String!
   city: String!
   state: String!
@@ -220,7 +220,7 @@ type PropertyPage {
 
 type PropertyPoint {
   impressions: Int!
-  profit: Float!
+  profit: String!
   # The document's ID.
   _id: ID!
   propertyId: ID!
@@ -238,7 +238,7 @@ input PropertyPointInput {
   userId: ID!
   propertyId: ID!
   impressions: Int!
-  profit: Float!
+  profit: String!
 }
 
 # The pagination object for elements of type 'PropertyPoint'.
@@ -337,7 +337,7 @@ type User {
   email: String!
   # The document's ID.
   _id: ID!
-  balance: Float!
+  balance: String!
   properties(
     # The number of items to return per page.
     _size: Int
@@ -360,7 +360,7 @@ type User {
 # 'User' input values
 input UserInput {
   phone: String
-  balance: Float!
+  balance: String!
   email: String!
   name: String!
   properties: UserPropertiesRelation

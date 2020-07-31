@@ -16,7 +16,7 @@ const resolver: MutationResolvers.IncrementPropertyViewResolver = async (_, { in
         propertyPointId = (await ctx.client.createPropertyPoint({
             data: {
                 impressions: 0,
-                profit: 0,
+                profit: "0",
                 propertyId,
                 userId: referrerId,
                 property: {

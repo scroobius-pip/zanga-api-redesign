@@ -6,9 +6,9 @@ const propertyResolver: QueryResolvers.PropertyResolver = async (_, args, ctx) =
 
     return {
         ...property,
-        expense: property?.expense ?? 0,
-        remainingExpense: property?.remainingExpense ?? 0,
-        bounty: property?.bounty ?? 0,
+        expense: parseFloat(property?.expense ?? "0"),
+        remainingExpense: parseFloat(property?.remainingExpense ?? "0"),
+        bounty: parseFloat(property?.bounty ?? "0"),
         featured: !!(property?.featured),
         owner: {
             ...property.owner,
