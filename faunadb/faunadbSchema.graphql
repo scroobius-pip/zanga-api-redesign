@@ -57,6 +57,15 @@ type Mutation {
     # 'Property' input values
     data: PropertyInput!
   ): Property
+  # Partially updates an existing document in the collection of 'Transaction'. It
+  # only modifies the values that are specified in the arguments. During
+  # execution, it verifies that required fields are not set to 'null'.
+  partialUpdateTransaction(
+    # The 'Transaction' document's ID
+    id: ID!
+    # 'Transaction' input values
+    data: PartialUpdateTransactionInput!
+  ): Transaction
   # Delete an existing document in the collection of 'Property'
   deleteProperty(
     # The 'Property' document's ID
@@ -84,6 +93,13 @@ type Mutation {
     # 'Property' input values
     data: PropertyInput!
   ): Property!
+  # Update an existing document in the collection of 'Transaction'
+  updateTransaction(
+    # The 'Transaction' document's ID
+    id: ID!
+    # 'Transaction' input values
+    data: TransactionInput!
+  ): Transaction
   # Partially updates an existing document in the collection of 'Property'. It
   # only modifies the values that are specified in the arguments. During
   # execution, it verifies that required fields are not set to 'null'.
@@ -103,6 +119,11 @@ type Mutation {
     # The 'PropertyPoint' document's ID
     id: ID!
   ): PropertyPoint
+  # Create a new document in the collection of 'Transaction'
+  createTransaction(
+    # 'Transaction' input values
+    data: TransactionInput!
+  ): Transaction!
   # Partially updates an existing document in the collection of 'User'. It only
   # modifies the values that are specified in the arguments. During execution, it
   # verifies that required fields are not set to 'null'.
@@ -113,6 +134,11 @@ type Mutation {
     data: PartialUpdateUserInput!
   ): User
   subtractUserBalance(userId: ID!, value: Float!): Float!
+  # Delete an existing document in the collection of 'Transaction'
+  deleteTransaction(
+    # The 'Transaction' document's ID
+    id: ID!
+  ): Transaction
 }
 
 # 'Image' input values
@@ -147,6 +173,14 @@ input PartialUpdatePropertyPointInput {
   propertyId: ID
   impressions: Int
   profit: String
+}
+
+# 'Transaction' input values
+input PartialUpdateTransactionInput {
+  transactionId: ID
+  type: TransactionType
+  amount: Float
+  user: TransactionUserRelation
 }
 
 # 'User' input values
@@ -303,6 +337,11 @@ type Query {
     propertyId: ID!
     userId: ID!
   ): PropertyPoint
+  # Find a document from the collection of 'Transaction' by its id.
+  findTransactionByID(
+    # The 'Transaction' document's ID
+    id: ID!
+  ): Transaction
   findPropertyPointsByUserId(
     # The number of items to return per page.
     _size: Int
@@ -331,6 +370,38 @@ type Query {
 }
 
 scalar Time
+
+type Transaction {
+  # The document's ID.
+  _id: ID!
+  amount: Float!
+  type: TransactionType!
+  user: User!
+  transactionId: ID!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Transaction' input values
+input TransactionInput {
+  transactionId: ID!
+  type: TransactionType!
+  amount: Float!
+  user: TransactionUserRelation
+}
+
+enum TransactionType {
+  Debit
+  Credit
+}
+
+# Allow manipulating the relationship between the types 'Transaction' and 'User' using the field 'Transaction.user'.
+input TransactionUserRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
 
 type User {
   name: String!

@@ -56,6 +56,11 @@ Individual
 Unassigned
 }
 
+enum TransactionType {
+  Debit
+  Credit
+}
+
 type Query {
   # findPropertiesByCostType(costType:CostType!):[Property!]!
   findUserByEmail(email:String!):User
@@ -66,13 +71,14 @@ type Query {
   findPropertiesByCostTypeAndState(costType:CostType!,state:String!):[Property!]
   findPropertiesByUserId(costType:CostType!,state:String!):[Property!]
   findPropertyPointsByUserId(userId:ID!):[PropertyPoint!]
+  findTransactionByTransactionId(transactionId:ID!):Transaction
 }
 
 type Mutation {
   incrementPropertyPoint(propertyPointId:ID!): PropertyPoint! @resolver(name:"increment_property_point")
   incrementPropertyVisit(propertyId:ID!):Property! @resolver(name:"increment_property_visit")
-  addUserBalance(userId:ID!,value:Float!):Float! @resolver(name:"add_user_balance") #userId is the database id
-  subtractUserBalance(userId:ID!,value:Float!):Float! @resolver(name:"sub_user_balance")
+  addUserBalance(userId:ID!,value:Float!):String! @resolver(name:"add_user_balance") #userId is the database id
+  subtractUserBalance(userId:ID!,value:Float!):String! @resolver(name:"sub_user_balance")
 
 }
 
@@ -83,6 +89,13 @@ type PropertyPoint {
   propertyId:ID!
   impressions: Int!
   profit:String!
+}
+
+type Transaction {
+  transactionId:ID! @unique
+  type:TransactionType!
+  amount: Float!
+  user: User!
 }
 
 

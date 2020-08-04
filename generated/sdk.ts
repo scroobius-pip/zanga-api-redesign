@@ -47,16 +47,20 @@ export type Mutation = {
   incrementPropertyVisit: Property;
   incrementPropertyPoint: PropertyPoint;
   updateProperty?: Maybe<Property>;
+  partialUpdateTransaction?: Maybe<Transaction>;
   deleteProperty?: Maybe<Property>;
   partialUpdatePropertyPoint?: Maybe<PropertyPoint>;
   addUserBalance: Scalars['Float'];
   updatePropertyPoint?: Maybe<PropertyPoint>;
   createProperty: Property;
+  updateTransaction?: Maybe<Transaction>;
   partialUpdateProperty?: Maybe<Property>;
   deleteUser?: Maybe<User>;
   deletePropertyPoint?: Maybe<PropertyPoint>;
+  createTransaction: Transaction;
   partialUpdateUser?: Maybe<User>;
   subtractUserBalance: Scalars['Float'];
+  deleteTransaction?: Maybe<Transaction>;
 };
 
 
@@ -92,6 +96,12 @@ export type MutationUpdatePropertyArgs = {
 };
 
 
+export type MutationPartialUpdateTransactionArgs = {
+  id: Scalars['ID'];
+  data: PartialUpdateTransactionInput;
+};
+
+
 export type MutationDeletePropertyArgs = {
   id: Scalars['ID'];
 };
@@ -120,6 +130,12 @@ export type MutationCreatePropertyArgs = {
 };
 
 
+export type MutationUpdateTransactionArgs = {
+  id: Scalars['ID'];
+  data: TransactionInput;
+};
+
+
 export type MutationPartialUpdatePropertyArgs = {
   id: Scalars['ID'];
   data: PartialUpdatePropertyInput;
@@ -136,6 +152,11 @@ export type MutationDeletePropertyPointArgs = {
 };
 
 
+export type MutationCreateTransactionArgs = {
+  data: TransactionInput;
+};
+
+
 export type MutationPartialUpdateUserArgs = {
   id: Scalars['ID'];
   data: PartialUpdateUserInput;
@@ -145,6 +166,11 @@ export type MutationPartialUpdateUserArgs = {
 export type MutationSubtractUserBalanceArgs = {
   userId: Scalars['ID'];
   value: Scalars['Float'];
+};
+
+
+export type MutationDeleteTransactionArgs = {
+  id: Scalars['ID'];
 };
 
 export type PartialUpdateImageInput = {
@@ -176,6 +202,13 @@ export type PartialUpdatePropertyPointInput = {
   propertyId?: Maybe<Scalars['ID']>;
   impressions?: Maybe<Scalars['Int']>;
   profit?: Maybe<Scalars['String']>;
+};
+
+export type PartialUpdateTransactionInput = {
+  transactionId?: Maybe<Scalars['ID']>;
+  type?: Maybe<TransactionType>;
+  amount?: Maybe<Scalars['Float']>;
+  user?: Maybe<TransactionUserRelation>;
 };
 
 export type PartialUpdateUserInput = {
@@ -285,6 +318,7 @@ export type Query = {
   findPropertyBySlug: Property;
   findPropertiesByUserId: PropertyPage;
   findPropertyPointByPropertyIdAndUserId?: Maybe<PropertyPoint>;
+  findTransactionByID?: Maybe<Transaction>;
   findPropertyPointsByUserId: PropertyPointPage;
   findUserByID?: Maybe<User>;
   findUserByUserId?: Maybe<User>;
@@ -337,6 +371,11 @@ export type QueryFindPropertyPointByPropertyIdAndUserIdArgs = {
 };
 
 
+export type QueryFindTransactionByIdArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type QueryFindPropertyPointsByUserIdArgs = {
   _size?: Maybe<Scalars['Int']>;
   _cursor?: Maybe<Scalars['String']>;
@@ -365,6 +404,33 @@ export type QueryFindPropertiesByCostTypeArgs = {
   costType: CostType;
 };
 
+
+export type Transaction = {
+  __typename?: 'Transaction';
+  _id: Scalars['ID'];
+  amount: Scalars['Float'];
+  type: TransactionType;
+  user: User;
+  transactionId: Scalars['ID'];
+  _ts: Scalars['Long'];
+};
+
+export type TransactionInput = {
+  transactionId: Scalars['ID'];
+  type: TransactionType;
+  amount: Scalars['Float'];
+  user?: Maybe<TransactionUserRelation>;
+};
+
+export enum TransactionType {
+  Debit = 'Debit',
+  Credit = 'Credit'
+}
+
+export type TransactionUserRelation = {
+  create?: Maybe<UserInput>;
+  connect?: Maybe<Scalars['ID']>;
+};
 
 export type User = {
   __typename?: 'User';
