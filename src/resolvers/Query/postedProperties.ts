@@ -8,7 +8,7 @@ const propertiesResolver: QueryResolvers.PostedPropertiesResolver = async (_, { 
         throw new AuthenticationError('Token Not Passed')
     }
 
-    const result = (await ctx.client.userProperties({ email: ctx.userEmail, cursor: input?.cursor, size: 25 })).findUserByEmail?.properties
+    const result = (await ctx.client.userProperties({ email: ctx.userEmail, cursor: input?.cursor, size: 50 })).findUserByEmail?.properties
 
     return {
         properties: (result?.data ?? []).map(mapDbPropertyToProperty),
