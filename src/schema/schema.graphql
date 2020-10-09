@@ -36,6 +36,7 @@ type Property {
   slug: String!
 }
 
+
 type Image {
   url:String!
   previewUrl:String!
@@ -108,8 +109,8 @@ input PropertyViewInput {
 }
 
 input PropertiesInput {
- type:CostType!
- state:String!
+ type:CostType
+ state:String
  budget:Float
  cursor: String
 }
@@ -165,6 +166,7 @@ type Mutation {
     deleteProperty(id:ID!):Boolean!
     incrementPropertyView(input:PropertyViewInput!):Boolean
     updateUser(input:UserInput!):Boolean!
+    updateProperty(input:UpdatePropertyInput!):Boolean!
     assignBounty(input:BountyInput!):Boolean!
     withdrawBalance(input:WithdrawBalanceInput!):WithdrawBalanceResult!
 }
@@ -180,3 +182,12 @@ input CreatePropertyInput {
   description: String!
 }
 
+input UpdatePropertyInput {
+  propertySlug: ID!
+  title: String!
+  location: LocationInput!
+  costValue:Int!
+  costType: CostType!
+  featured:Boolean!
+  description: String!
+}

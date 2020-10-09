@@ -1,0 +1,11 @@
+
+
+query allProperties($cursor:String,$size:Int){
+  allProperties(_cursor:$cursor,_size:$size){
+    after
+    before
+    data{
+     ...PropertyFields
+    }
+  }
+}

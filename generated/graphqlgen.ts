@@ -27,8 +27,8 @@ export namespace QueryResolvers {
     cursor?: string | null;
   }
   export interface PropertiesInput {
-    type: CostType;
-    state: string;
+    type?: CostType | null;
+    state?: string | null;
     budget?: number | null;
     cursor?: string | null;
   }
@@ -1715,6 +1715,15 @@ export namespace MutationResolvers {
     name?: string | null;
     phone?: string | null;
   }
+  export interface UpdatePropertyInput {
+    propertySlug: string;
+    title: string;
+    location: LocationInput;
+    costValue: number;
+    costType: CostType;
+    featured: boolean;
+    description: string;
+  }
   export interface BountyInput {
     propertyId: string;
     expense: number;
@@ -1750,6 +1759,10 @@ export namespace MutationResolvers {
 
   export interface ArgsUpdateUser {
     input: UserInput;
+  }
+
+  export interface ArgsUpdateProperty {
+    input: UpdatePropertyInput;
   }
 
   export interface ArgsAssignBounty {
@@ -1823,6 +1836,23 @@ export namespace MutationResolvers {
         resolve: (
           parent: undefined,
           args: ArgsUpdateUser,
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => boolean | Promise<boolean>;
+      };
+
+  export type UpdatePropertyResolver =
+    | ((
+        parent: undefined,
+        args: ArgsUpdateProperty,
+        ctx: Context,
+        info: GraphQLResolveInfo
+      ) => boolean | Promise<boolean>)
+    | {
+        fragment: string;
+        resolve: (
+          parent: undefined,
+          args: ArgsUpdateProperty,
           ctx: Context,
           info: GraphQLResolveInfo
         ) => boolean | Promise<boolean>;
@@ -1926,6 +1956,23 @@ export namespace MutationResolvers {
           resolve: (
             parent: undefined,
             args: ArgsUpdateUser,
+            ctx: Context,
+            info: GraphQLResolveInfo
+          ) => boolean | Promise<boolean>;
+        };
+
+    updateProperty:
+      | ((
+          parent: undefined,
+          args: ArgsUpdateProperty,
+          ctx: Context,
+          info: GraphQLResolveInfo
+        ) => boolean | Promise<boolean>)
+      | {
+          fragment: string;
+          resolve: (
+            parent: undefined,
+            args: ArgsUpdateProperty,
             ctx: Context,
             info: GraphQLResolveInfo
           ) => boolean | Promise<boolean>;

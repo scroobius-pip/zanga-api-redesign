@@ -80,7 +80,7 @@ type Mutation {
     # 'PropertyPoint' input values
     data: PartialUpdatePropertyPointInput!
   ): PropertyPoint
-  addUserBalance(userId: ID!, value: Float!): Float!
+  addUserBalance(userId: ID!, value: Float!): String!
   # Update an existing document in the collection of 'PropertyPoint'
   updatePropertyPoint(
     # The 'PropertyPoint' document's ID
@@ -133,7 +133,7 @@ type Mutation {
     # 'User' input values
     data: PartialUpdateUserInput!
   ): User
-  subtractUserBalance(userId: ID!, value: Float!): Float!
+  subtractUserBalance(userId: ID!, value: Float!): String!
   # Delete an existing document in the collection of 'Transaction'
   deleteTransaction(
     # The 'Transaction' document's ID
@@ -162,6 +162,7 @@ input PartialUpdatePropertyInput {
   images: [PartialUpdateImageInput!]
   description: String
   featured: Boolean
+  modifiedAt: String
   slug: String
 }
 
@@ -196,6 +197,7 @@ input PartialUpdateUserInput {
 }
 
 type Property {
+  modifiedAt: String
   visits: Int!
   city: String!
   expense: String
@@ -231,6 +233,7 @@ input PropertyInput {
   images: [ImageInput!]
   description: String!
   featured: Boolean
+  modifiedAt: String
   slug: String!
 }
 
@@ -354,12 +357,33 @@ type Query {
     # The 'User' document's ID
     id: ID!
   ): User
+  findTransactionByTransactionId(transactionId: ID!): Transaction
+  allPropertiesByState(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+    state: String!
+  ): PropertyPage!
   findUserByUserId(userId: ID!): User
   # Find a document from the collection of 'PropertyPoint' by its id.
   findPropertyPointByID(
     # The 'PropertyPoint' document's ID
     id: ID!
   ): PropertyPoint
+  allProperties(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): PropertyPage!
+  allPropertiesByCostType(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+    costType: CostType!
+  ): PropertyPage!
   findPropertiesByCostType(
     # The number of items to return per page.
     _size: Int

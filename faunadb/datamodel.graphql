@@ -34,7 +34,7 @@ type Property {
   images: [Image!] 
   description: String!
   featured: Boolean
-
+  modifiedAt: String
   slug:String!  @unique
 }
 
@@ -70,6 +70,9 @@ type Query {
   findPropertyBySlug(slug:String!):Property
   findPropertiesByCostTypeAndState(costType:CostType!,state:String!):[Property!]
   findPropertiesByUserId(costType:CostType!,state:String!):[Property!]
+  allProperties:[Property!]
+  allPropertiesByCostType(costType:CostType!):[Property!]
+  allPropertiesByState(state:String!):[Property!]
   findPropertyPointsByUserId(userId:ID!):[PropertyPoint!]
   findTransactionByTransactionId(transactionId:ID!):Transaction
 }

@@ -10,6 +10,7 @@ fragment PropertyFields on Property {
     owner {
       name
       phone
+      dbId:_id
     }
     costType
     costValue

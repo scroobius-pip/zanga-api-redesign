@@ -1,0 +1,11 @@
+
+
+query allPropertiesState($state:String!,$cursor:String,$size:Int){
+  allPropertiesByState(state:$state,_cursor:$cursor,_size:$size){
+    after
+    before
+    data{
+     ...PropertyFields
+    }
+  }
+}

@@ -50,7 +50,7 @@ export type Mutation = {
   partialUpdateTransaction?: Maybe<Transaction>;
   deleteProperty?: Maybe<Property>;
   partialUpdatePropertyPoint?: Maybe<PropertyPoint>;
-  addUserBalance: Scalars['Float'];
+  addUserBalance: Scalars['String'];
   updatePropertyPoint?: Maybe<PropertyPoint>;
   createProperty: Property;
   updateTransaction?: Maybe<Transaction>;
@@ -59,7 +59,7 @@ export type Mutation = {
   deletePropertyPoint?: Maybe<PropertyPoint>;
   createTransaction: Transaction;
   partialUpdateUser?: Maybe<User>;
-  subtractUserBalance: Scalars['Float'];
+  subtractUserBalance: Scalars['String'];
   deleteTransaction?: Maybe<Transaction>;
 };
 
@@ -192,6 +192,7 @@ export type PartialUpdatePropertyInput = {
   images?: Maybe<Array<PartialUpdateImageInput>>;
   description?: Maybe<Scalars['String']>;
   featured?: Maybe<Scalars['Boolean']>;
+  modifiedAt?: Maybe<Scalars['String']>;
   slug?: Maybe<Scalars['String']>;
 };
 
@@ -224,6 +225,7 @@ export type PartialUpdateUserInput = {
 
 export type Property = {
   __typename?: 'Property';
+  modifiedAt?: Maybe<Scalars['String']>;
   visits: Scalars['Int'];
   city: Scalars['String'];
   expense?: Maybe<Scalars['String']>;
@@ -256,6 +258,7 @@ export type PropertyInput = {
   images?: Maybe<Array<ImageInput>>;
   description: Scalars['String'];
   featured?: Maybe<Scalars['Boolean']>;
+  modifiedAt?: Maybe<Scalars['String']>;
   slug: Scalars['String'];
 };
 
@@ -321,8 +324,12 @@ export type Query = {
   findTransactionByID?: Maybe<Transaction>;
   findPropertyPointsByUserId: PropertyPointPage;
   findUserByID?: Maybe<User>;
+  findTransactionByTransactionId?: Maybe<Transaction>;
+  allPropertiesByState: PropertyPage;
   findUserByUserId?: Maybe<User>;
   findPropertyPointByID?: Maybe<PropertyPoint>;
+  allProperties: PropertyPage;
+  allPropertiesByCostType: PropertyPage;
   findPropertiesByCostType: PropertyPage;
 };
 
@@ -388,6 +395,18 @@ export type QueryFindUserByIdArgs = {
 };
 
 
+export type QueryFindTransactionByTransactionIdArgs = {
+  transactionId: Scalars['ID'];
+};
+
+
+export type QueryAllPropertiesByStateArgs = {
+  _size?: Maybe<Scalars['Int']>;
+  _cursor?: Maybe<Scalars['String']>;
+  state: Scalars['String'];
+};
+
+
 export type QueryFindUserByUserIdArgs = {
   userId: Scalars['ID'];
 };
@@ -395,6 +414,19 @@ export type QueryFindUserByUserIdArgs = {
 
 export type QueryFindPropertyPointByIdArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryAllPropertiesArgs = {
+  _size?: Maybe<Scalars['Int']>;
+  _cursor?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryAllPropertiesByCostTypeArgs = {
+  _size?: Maybe<Scalars['Int']>;
+  _cursor?: Maybe<Scalars['String']>;
+  costType: CostType;
 };
 
 
@@ -494,6 +526,7 @@ export type PropertyFieldsFragment = (
   & { owner: (
     { __typename?: 'User' }
     & Pick<User, 'name' | 'phone'>
+    & { dbId: User['_id'] }
   ), images?: Maybe<Array<(
     { __typename?: 'Image' }
     & Pick<Image, 'previewUrl' | 'url'>
@@ -632,6 +665,62 @@ export type UpdateUserMutation = (
   )> }
 );
 
+export type AllPropertiesQueryVariables = Exact<{
+  cursor?: Maybe<Scalars['String']>;
+  size?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type AllPropertiesQuery = (
+  { __typename?: 'Query' }
+  & { allProperties: (
+    { __typename?: 'PropertyPage' }
+    & Pick<PropertyPage, 'after' | 'before'>
+    & { data: Array<Maybe<(
+      { __typename?: 'Property' }
+      & PropertyFieldsFragment
+    )>> }
+  ) }
+);
+
+export type AllPropertiesCostTypeQueryVariables = Exact<{
+  type: CostType;
+  cursor?: Maybe<Scalars['String']>;
+  size?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type AllPropertiesCostTypeQuery = (
+  { __typename?: 'Query' }
+  & { allPropertiesByCostType: (
+    { __typename?: 'PropertyPage' }
+    & Pick<PropertyPage, 'after' | 'before'>
+    & { data: Array<Maybe<(
+      { __typename?: 'Property' }
+      & PropertyFieldsFragment
+    )>> }
+  ) }
+);
+
+export type AllPropertiesStateQueryVariables = Exact<{
+  state: Scalars['String'];
+  cursor?: Maybe<Scalars['String']>;
+  size?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type AllPropertiesStateQuery = (
+  { __typename?: 'Query' }
+  & { allPropertiesByState: (
+    { __typename?: 'PropertyPage' }
+    & Pick<PropertyPage, 'after' | 'before'>
+    & { data: Array<Maybe<(
+      { __typename?: 'Property' }
+      & PropertyFieldsFragment
+    )>> }
+  ) }
+);
+
 export type FeaturedPropertiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -685,6 +774,19 @@ export type UserPropertiesQuery = (
         & PropertyFieldsFragment
       )>> }
     ) }
+  )> }
+);
+
+export type PropertyByIdQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type PropertyByIdQuery = (
+  { __typename?: 'Query' }
+  & { findPropertyByID?: Maybe<(
+    { __typename?: 'Property' }
+    & PropertyFieldsFragment
   )> }
 );
 
@@ -777,6 +879,7 @@ export const PropertyFieldsFragmentDoc = gql`
   owner {
     name
     phone
+    dbId: _id
   }
   costType
   costValue
@@ -875,6 +978,39 @@ export const UpdateUserDocument = gql`
   }
 }
     ${UserFieldsFragmentDoc}`;
+export const AllPropertiesDocument = gql`
+    query allProperties($cursor: String, $size: Int) {
+  allProperties(_cursor: $cursor, _size: $size) {
+    after
+    before
+    data {
+      ...PropertyFields
+    }
+  }
+}
+    ${PropertyFieldsFragmentDoc}`;
+export const AllPropertiesCostTypeDocument = gql`
+    query allPropertiesCostType($type: CostType!, $cursor: String, $size: Int) {
+  allPropertiesByCostType(costType: $type, _cursor: $cursor, _size: $size) {
+    after
+    before
+    data {
+      ...PropertyFields
+    }
+  }
+}
+    ${PropertyFieldsFragmentDoc}`;
+export const AllPropertiesStateDocument = gql`
+    query allPropertiesState($state: String!, $cursor: String, $size: Int) {
+  allPropertiesByState(state: $state, _cursor: $cursor, _size: $size) {
+    after
+    before
+    data {
+      ...PropertyFields
+    }
+  }
+}
+    ${PropertyFieldsFragmentDoc}`;
 export const FeaturedPropertiesDocument = gql`
     query featuredProperties {
   findPropertyByFeatured(_size: 100, featured: true) {
@@ -905,6 +1041,13 @@ export const UserPropertiesDocument = gql`
         ...PropertyFields
       }
     }
+  }
+}
+    ${PropertyFieldsFragmentDoc}`;
+export const PropertyByIdDocument = gql`
+    query propertyById($id: ID!) {
+  findPropertyByID(id: $id) {
+    ...PropertyFields
   }
 }
     ${PropertyFieldsFragmentDoc}`;
@@ -986,6 +1129,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     updateUser(variables: UpdateUserMutationVariables): Promise<UpdateUserMutation> {
       return withWrapper(() => client.request<UpdateUserMutation>(print(UpdateUserDocument), variables));
     },
+    allProperties(variables?: AllPropertiesQueryVariables): Promise<AllPropertiesQuery> {
+      return withWrapper(() => client.request<AllPropertiesQuery>(print(AllPropertiesDocument), variables));
+    },
+    allPropertiesCostType(variables: AllPropertiesCostTypeQueryVariables): Promise<AllPropertiesCostTypeQuery> {
+      return withWrapper(() => client.request<AllPropertiesCostTypeQuery>(print(AllPropertiesCostTypeDocument), variables));
+    },
+    allPropertiesState(variables: AllPropertiesStateQueryVariables): Promise<AllPropertiesStateQuery> {
+      return withWrapper(() => client.request<AllPropertiesStateQuery>(print(AllPropertiesStateDocument), variables));
+    },
     featuredProperties(variables?: FeaturedPropertiesQueryVariables): Promise<FeaturedPropertiesQuery> {
       return withWrapper(() => client.request<FeaturedPropertiesQuery>(print(FeaturedPropertiesDocument), variables));
     },
@@ -994,6 +1146,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     userProperties(variables: UserPropertiesQueryVariables): Promise<UserPropertiesQuery> {
       return withWrapper(() => client.request<UserPropertiesQuery>(print(UserPropertiesDocument), variables));
+    },
+    propertyById(variables: PropertyByIdQueryVariables): Promise<PropertyByIdQuery> {
+      return withWrapper(() => client.request<PropertyByIdQuery>(print(PropertyByIdDocument), variables));
     },
     property(variables: PropertyQueryVariables): Promise<PropertyQuery> {
       return withWrapper(() => client.request<PropertyQuery>(print(PropertyDocument), variables));

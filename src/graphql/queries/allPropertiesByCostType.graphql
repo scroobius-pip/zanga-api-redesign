@@ -1,0 +1,11 @@
+
+
+query allPropertiesCostType($type:CostType!,$cursor:String,$size:Int){
+  allPropertiesByCostType(costType:$type,_cursor:$cursor,_size:$size){
+    after
+    before
+    data{
+     ...PropertyFields
+    }
+  }
+}

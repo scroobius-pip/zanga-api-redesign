@@ -17,6 +17,9 @@ export const Mutation: MutationResolvers.Type = {
   updateUser: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
   },
+  updateProperty: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
+  },
   assignBounty: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
   },
